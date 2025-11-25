@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading...</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            display: block;
+        }
+        .loading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #666;
+            background: #f5f5f5;
+        }
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #1a73e8;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-bottom: 16px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="content">
+        <div class="loading">
+            <div class="spinner"></div>
+            <div>Loading page...</div>
+        </div>
+    </div>
+    <script>
+        // Get URL from query parameter
+        const urlParams = new URLSearchParams(window.location.search);
+        const targetUrl = urlParams.get('url') || urlParams.get('u');
+        
+        if (!targetUrl) {
+            document.getElementById('content').innerHTML = 
+                '<div class="loading"><div>No URL provided</div></div>';
+        } else {
+            loadPage(targetUrl);
+        }
+        
+        function loadPage(url) {
+            // Create iframe to load the page
+            const iframe = document.createElement('iframe');
+            iframe.id = 'proxyFrame';
+            iframe.src = url;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            
+            // Try to load directly first
+            iframe.onload = () => {
+                document.getElementById('content').innerHTML = '';
+                document.getElementById('content').appendChild(iframe);
+            };
+            
+            // If direct load fails, try using a CORS proxy service
+            iframe.onerror = () => {
+                tryProxyServices(url);
+            };
+            
+            // Set timeout - if page doesn't load in 3 seconds, try proxy
+            const timeout = setTimeout(() => {
+                if (document.getElementById('proxyFrame') && 
+                    !document.getElementById('proxyFrame').contentWindow) {
+                    tryProxyServices(url);
+                }
+            }, 3000);
+            
+            iframe.onload = () => {
+                clearTimeout(timeout);
+                document.getElementById('content').innerHTML = '';
+                document.getElementById('content').appendChild(iframe);
+            };
+            
+            document.getElementById('content').appendChild(iframe);
+        }
+        
+        function tryProxyServices(url) {
+            // Try multiple proxy services
+            const proxies = [
+                `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
+                `https://corsproxy.io/?${encodeURIComponent(url)}`
+            ];
+            
+            let proxyIndex = 0;
+            
+            function tryNextProxy() {
+                if (proxyIndex >= proxies.length) {
+                    // All proxies failed, show error
+                    document.getElementById('content').innerHTML = `
+                        <div class="loading">
+                            <div>Unable to load: ${url}</div>
+                            <div style="margin-top: 16px; font-size: 14px; color: #999;">
+                                This site may block iframe embedding.<br>
+                                <a href="${url}" target="_blank" style="color: #1a73e8; text-decoration: none;">
+                                    Open in new tab
+                                </a>
+                            </div>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                const proxyUrl = proxies[proxyIndex];
+                proxyIndex++;
+                
+                // Try to fetch and display
+                fetch(proxyUrl)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Proxy failed');
+                        return response.text();
+                    })
+                    .then(html => {
+                        // Write the HTML directly
+                        document.open();
+                        document.write(html);
+                        document.close();
+                    })
+                    .catch(() => {
+                        // Try next proxy
+                        tryNextProxy();
+                    });
+            }
+            
+            tryNextProxy();
+        }
+    </script>
+</body>
+</html>
+

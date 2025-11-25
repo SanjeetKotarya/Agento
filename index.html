@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SaaS AI-Powered Browser - LinkedIn Outreach</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <div class="browser-container">
+      <!-- Browser Window -->
+      <div class="browser-window">
+        <!-- Tabs Bar (Top) -->
+        <div class="tabs-bar">
+          <div class="tabs-container" id="tabsContainer">
+            <div class="tab active" data-tab-id="tab-1">
+              <div class="tab-icon">
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                </svg>
+              </div>
+              <span class="tab-title">LinkedIn Profile</span>
+              <button class="tab-close" onclick="closeTab(event, 'tab-1')">
+                ×
+              </button>
+            </div>
+          </div>
+          <button class="new-tab-btn" id="newTabBtn" title="New Tab">+</button>
+          <div class="window-controls">
+            <button class="window-control-btn minimize" title="Minimize">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <line x1="2" y1="6" x2="10" y2="6" />
+              </svg>
+            </button>
+            <button class="window-control-btn maximize" title="Maximize">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <rect
+                  x="2"
+                  y="2"
+                  width="7"
+                  height="7"
+                  fill="rgba(95,99,104,0.2)"
+                />
+                <rect x="3" y="3" width="7" height="7" fill="none" />
+              </svg>
+            </button>
+            <button class="window-control-btn close" title="Close">
+              <svg
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="1.5"
+              >
+                <line x1="3" y1="3" x2="9" y2="9" />
+                <line x1="9" y1="3" x2="3" y2="9" />
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <!-- Toolbar -->
+        <div class="toolbar">
+          <div class="nav-buttons">
+            <button class="nav-btn" disabled title="Back">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M19 12H5M12 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <button class="nav-btn" disabled title="Forward">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M5 12h14M12 5l7 7-7 7" />
+              </svg>
+            </button>
+            <button class="nav-btn" disabled title="Reload">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path
+                  d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"
+                />
+              </svg>
+            </button>
+            <button class="nav-btn" disabled title="Home">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                <polyline points="9 22 9 12 15 12 15 22" />
+              </svg>
+            </button>
+          </div>
+
+          <div class="address-bar-container">
+            <div class="address-bar">
+              <svg
+                class="lock-icon"
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+              </svg>
+              <input
+                type="text"
+                id="addressInput"
+                placeholder="LinkedIn Profile"
+                value="linkedin.com/in/profile"
+                readonly
+              />
+              <div class="address-bar-actions">
+                <button class="star-btn" title="Bookmark" disabled>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                  >
+                    <path
+                      d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
+                    />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="toolbar-actions">
+            <button
+              class="toolbar-btn"
+              id="aiAssistantBtn"
+              title="AI Assistant"
+            >
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 230.000000 230.000000"
+                preserveAspectRatio="xMidYMid meet"
+              >
+                <g
+                  transform="translate(0.000000,230.000000) scale(0.100000,-0.100000)"
+                  fill="currentColor"
+                  stroke="none"
+                >
+                  <path
+                    d="M1183 2225 c-95 -26 -163 -72 -216 -145 -36 -51 -120 -199 -237 -420
+                       -146 -276 -443 -818 -492 -898 -123 -201 -140 -357 -57 -524 76 -151 214 -227
+                       390 -215 124 8 211 63 334 209 94 112 126 142 185 173 65 33 107 37 412 39
+                       250 2 279 4 338 24 159 52 248 159 286 344 28 133 -2 236 -141 497 -86 163
+                       -135 249 -351 624 -139 243 -200 299 -334 304 -36 2 -89 -4 -117 -12z m207
+                       -762 c255 -460 300 -543 300 -557 0 -11 -48 -15 -252 -19 -216 -4 -265 -8
+                       -332 -26 -153 -41 -283 -119 -401 -241 -62 -65 -105 -88 -105 -56 0 28 276
+                       559 440 846 39 69 92 167 117 218 37 74 51 92 68 92 19 0 46 -43 165 -257z"
+                  />
+                </g>
+              </svg>
+            </button>
+
+            <button class="toolbar-btn" id="analyticsBtn" title="Analytics">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+              >
+                <line x1="18" y1="20" x2="18" y2="10" />
+                <line x1="12" y1="20" x2="12" y2="4" />
+                <line x1="6" y1="20" x2="6" y2="14" />
+              </svg>
+            </button>
+            <div class="menu-wrapper">
+              <button class="toolbar-btn" id="menuBtn" title="Menu">
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <circle cx="12" cy="5" r="1.6" />
+                  <circle cx="12" cy="12" r="1.6" />
+                  <circle cx="12" cy="19" r="1.6" />
+                </svg>
+              </button>
+              <div class="menu-dropdown" id="menuDropdown">
+                <div class="menu-profile">
+                  <div class="menu-avatar">U</div>
+                  <div class="menu-account">
+                    <p class="menu-name">User</p>
+                    <p class="menu-status">Signed in</p>
+                  </div>
+                </div>
+                <div class="menu-section">
+                  <button class="menu-item">
+                    <span>New tab</span>
+                    <span class="shortcut">Ctrl+T</span>
+                  </button>
+                  <button class="menu-item">
+                    <span>New window</span>
+                    <span class="shortcut">Ctrl+N</span>
+                  </button>
+                  <button class="menu-item">
+                    <span>New incognito window</span>
+                    <span class="shortcut">Ctrl+Shift+N</span>
+                  </button>
+                </div>
+                <div class="menu-section">
+                  <button class="menu-item">
+                    <span>History</span>
+                    <span class="shortcut">Ctrl+H</span>
+                  </button>
+                  <button class="menu-item">
+                    <span>Downloads</span>
+                    <span class="shortcut">Ctrl+J</span>
+                  </button>
+                  <button class="menu-item">
+                    <span>Bookmarks and lists</span>
+                  </button>
+                  <button class="menu-item">
+                    <span>Extensions</span>
+                  </button>
+                </div>
+                <div class="menu-section">
+                  <button class="menu-item">
+                    <span>More tools</span>
+                  </button>
+                  <button class="menu-item">
+                    <span>Settings</span>
+                  </button>
+                  <button class="menu-item">
+                    <span>Help</span>
+                  </button>
+                  <button class="menu-item">
+                    <span>Exit</span>
+                  </button>
+                </div>
+                <div class="menu-section zoom-section">
+                  <span>Zoom</span>
+                  <div class="zoom-controls">
+                    <button class="zoom-btn">-</button>
+                    <span>100%</span>
+                    <button class="zoom-btn">+</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content-area">
+          <!-- Profile View -->
+          <div
+            class="web-view-container active"
+            data-tab-id="tab-1"
+            id="webView-tab-1"
+          >
+            <img src="profile.png" alt="LinkedIn Profile" />
+          </div>
+
+          <!-- AI Assistant Sidebar (Fixed) -->
+          <div class="web-view-overlay" id="webViewOverlay">
+            <div class="ai-workflow-panel" id="workflowPanel">
+              <div class="workflow-header">
+                <h3>LinkedIn Outreach Assistant</h3>
+                <button class="close-panel" onclick="closeWorkflowPanel()">
+                  ×
+                </button>
+              </div>
+              <div class="workflow-content">
+                <div class="profile-scan-section">
+                  <div class="scan-status" id="scanStatus">
+                    <div class="status-icon">
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <path
+                          d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                        />
+                      </svg>
+                    </div>
+                    <div class="status-text">
+                      <h4>Profile Scan Status</h4>
+                      <p id="scanStatusText">Ready to scan LinkedIn profile</p>
+                    </div>
+                  </div>
+                  <button
+                    class="scan-btn"
+                    id="scanBtn"
+                    onclick="scanLinkedInProfile()"
+                  >
+                    <svg
+                      width="20"
+                      height="20"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                      <polyline points="17 8 12 3 7 8" />
+                      <line x1="12" y1="3" x2="12" y2="15" />
+                    </svg>
+                    Scan Profile
+                  </button>
+                </div>
+
+                <div
+                  class="profile-data-section"
+                  id="profileDataSection"
+                  style="display: none"
+                >
+                  <h4>Extracted Profile Data</h4>
+                  <div class="profile-data-grid">
+                    <div class="data-item">
+                      <label>Name:</label>
+                      <span id="profileName">-</span>
+                    </div>
+                    <div class="data-item">
+                      <label>Title:</label>
+                      <span id="profileTitle">-</span>
+                    </div>
+                    <div class="data-item">
+                      <label>Company:</label>
+                      <span id="profileCompany">-</span>
+                    </div>
+                    <div class="data-item">
+                      <label>Location:</label>
+                      <span id="profileLocation">-</span>
+                    </div>
+                    <div class="data-item">
+                      <label>Email:</label>
+                      <span id="profileEmail">-</span>
+                    </div>
+                    <div class="data-item">
+                      <label>Experience:</label>
+                      <span id="profileExperience">-</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  class="email-composition-section"
+                  id="emailSection"
+                  style="display: none"
+                >
+                  <h4>Compose Outreach Email</h4>
+                  <div class="email-form">
+                    <div class="form-group">
+                      <label>To:</label>
+                      <input
+                        type="email"
+                        id="emailTo"
+                        placeholder="email@example.com"
+                        readonly
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label>Subject:</label>
+                      <input
+                        type="text"
+                        id="emailSubject"
+                        placeholder="Email subject"
+                      />
+                    </div>
+                    <div class="form-group">
+                      <label>Message:</label>
+                      <textarea
+                        id="emailMessage"
+                        rows="8"
+                        placeholder="Your outreach message..."
+                      ></textarea>
+                    </div>
+                    <div class="email-actions">
+                      <button
+                        class="btn-secondary"
+                        onclick="generateAIMessage()"
+                      >
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <path
+                            d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
+                          />
+                        </svg>
+                        Generate with AI
+                      </button>
+                      <button class="btn-primary" onclick="sendEmail()">
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          stroke-width="2"
+                        >
+                          <line x1="22" y1="2" x2="11" y2="13" />
+                          <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                        </svg>
+                        Send Email
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Analytics View -->
+          <div class="analytics-view" id="analyticsView" style="display: none">
+            <div class="analytics-container">
+              <div class="analytics-header">
+                <h2>Analytics Dashboard</h2>
+                <div class="time-filter">
+                  <button class="filter-btn active">Today</button>
+                  <button class="filter-btn">Week</button>
+                  <button class="filter-btn">Month</button>
+                </div>
+              </div>
+
+              <div class="analytics-grid">
+                <div class="stat-card">
+                  <div class="stat-icon" style="background: #e3f2fd">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#1976d2"
+                      stroke-width="2"
+                    >
+                      <path
+                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="stat-content">
+                    <h3 id="profilesScanned">24</h3>
+                    <p>Profiles Scanned</p>
+                  </div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-icon" style="background: #f3e5f5">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#7b1fa2"
+                      stroke-width="2"
+                    >
+                      <line x1="22" y1="2" x2="11" y2="13" />
+                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                    </svg>
+                  </div>
+                  <div class="stat-content">
+                    <h3 id="emailsSent">18</h3>
+                    <p>Emails Sent</p>
+                  </div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-icon" style="background: #e8f5e9">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#388e3c"
+                      stroke-width="2"
+                    >
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <div class="stat-content">
+                    <h3 id="successRate">75%</h3>
+                    <p>Success Rate</p>
+                  </div>
+                </div>
+
+                <div class="stat-card">
+                  <div class="stat-icon" style="background: #fff3e0">
+                    <svg
+                      width="24"
+                      height="24"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="#f57c00"
+                      stroke-width="2"
+                    >
+                      <circle cx="12" cy="12" r="10" />
+                      <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                  </div>
+                  <div class="stat-content">
+                    <h3 id="avgTime">2.4 min</h3>
+                    <p>Avg. Time per Profile</p>
+                  </div>
+                </div>
+              </div>
+
+              <div class="analytics-charts">
+                <div class="chart-card">
+                  <h3>Browsing Activity</h3>
+                  <div class="chart-container">
+                    <canvas id="activityChart"></canvas>
+                  </div>
+                </div>
+
+                <div class="chart-card">
+                  <h3>Agent Performance</h3>
+                  <div class="chart-container">
+                    <canvas id="performanceChart"></canvas>
+                  </div>
+                </div>
+              </div>
+
+              <div class="analytics-table-section">
+                <h3>Recent Activity</h3>
+                <div class="activity-table">
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Time</th>
+                        <th>Profile</th>
+                        <th>Action</th>
+                        <th>Status</th>
+                      </tr>
+                    </thead>
+                    <tbody id="activityTableBody">
+                      <!-- Populated by JavaScript -->
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="workflow-insights">
+                <h3>Workflow Insights</h3>
+                <div class="insights-grid">
+                  <div class="insight-card">
+                    <h4>Human Intervention Rate</h4>
+                    <div class="insight-value">12%</div>
+                    <p>Lower than average - workflow is highly automated</p>
+                  </div>
+                  <div class="insight-card">
+                    <h4>Peak Activity Time</h4>
+                    <div class="insight-value">10:00 AM</div>
+                    <p>Most profiles scanned during morning hours</p>
+                  </div>
+                  <div class="insight-card">
+                    <h4>Top Industry</h4>
+                    <div class="insight-value">Technology</div>
+                    <p>45% of profiles are from tech industry</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>
