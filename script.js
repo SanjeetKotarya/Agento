@@ -12,7 +12,7 @@ let analyticsData = {
     avgTime: 2.4,
     activities: [
         { time: '09:15 AM', profile: 'John Doe', action: 'Profile Scanned', status: 'success' },
-        { time: '09:22 AM', profile: 'Jane Smith', action: 'Email Sent', status: 'success' },
+        { time: '09:22 AM', profile: 'Yash Pundlik', action: 'Email Sent', status: 'success' },
         { time: '09:30 AM', profile: 'Bob Johnson', action: 'Profile Scanned', status: 'success' },
         { time: '09:35 AM', profile: 'Alice Brown', action: 'Email Sent', status: 'success' },
         { time: '09:42 AM', profile: 'Charlie Wilson', action: 'Profile Scanned', status: 'pending' },
@@ -28,6 +28,7 @@ const workflowState = {
 };
 
 let workflowToastTimeout = null;
+let jdProgressTimeout = null;
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
@@ -301,18 +302,18 @@ function initializeWorkflow() {
     const uploadJdBtn = document.getElementById('uploadJdBtn');
     const clearChatBtn = document.getElementById('clearChatBtn');
 
-    if (!roleSelect || !startButton) return;
-
-    startButton.addEventListener('click', () => {
-        workflowState.selectedRole = roleSelect.value;
-        updateSelectedRoleText();
-        setWorkflowStep(2);
-    });
+    if (roleSelect && startButton) {
+        startButton.addEventListener('click', () => {
+            workflowState.selectedRole = roleSelect.value;
+            updateSelectedRoleText();
+            setWorkflowStep(2);
+        });
+    }
 
     if (uploadJdBtn) {
         uploadJdBtn.addEventListener('click', () => {
-            showWorkflowToast('Upload JD coming soon');
-            console.log('Upload JD clicked');
+            uploadJdBtn.style.display = 'none';
+            startJdProcessing();
         });
     }
 
@@ -517,10 +518,10 @@ function getDraftTemplate() {
     const role = workflowState.selectedRole || 'Senior UX role';
 
     if (workflowState.tone === 'professional') {
-        return `Hello Jane,\n\nI'm reaching out because your background in Design Systems stands out for our ${role}. We rely on meticulous Figma workflows and believe your expertise could elevate the team. Would you be available for a short conversation this week?\n\nBest regards,`;
+        return `Hello Yash,\n\nI'm reaching out because your background in Design Systems stands out for our ${role}. We rely on meticulous Figma workflows and believe your expertise could elevate the team. Would you be available for a short conversation this week?\n\nBest regards,`;
     }
 
-    return `Hi Jane, I saw your work on Design Systems and think you'd be perfect for our ${role}. We use Figma extensively. Open to a chat?`;
+    return `Hi Yash, I saw your work on Design Systems and think you'd be perfect for our ${role}. We use Figma extensively. Open to a chat?`;
 }
 
 function showWorkflowToast(message) {
@@ -539,8 +540,63 @@ function showWorkflowToast(message) {
     }, 2200);
 }
 
+function startJdProcessing() {
+    const progress = document.getElementById('jdProgress');
+    const status = document.getElementById('jdProgressStatus');
+    const barFill = document.getElementById('jdProgressBarFill');
+
+    if (progress) {
+        progress.classList.remove('hidden', 'complete');
+        requestAnimationFrame(() => progress.classList.add('active'));
+    }
+
+    if (status) {
+        status.textContent = 'Analyzing…';
+    }
+
+    if (barFill) {
+        barFill.style.transition = 'none';
+        barFill.style.width = '0%';
+        requestAnimationFrame(() => {
+            barFill.style.transition = 'width 1.4s ease';
+            barFill.style.width = '100%';
+        });
+    }
+
+    if (jdProgressTimeout) {
+        clearTimeout(jdProgressTimeout);
+    }
+
+    jdProgressTimeout = setTimeout(() => {
+        completeJdProcessing(progress, status);
+    }, 1600);
+}
+
+function completeJdProcessing(progress, status) {
+    workflowState.selectedRole = 'Uploaded JD';
+    updateSelectedRoleText();
+    if (status) {
+        status.textContent = 'Match ready';
+    }
+    showWorkflowToast('JD uploaded successfully');
+    setWorkflowStep(2);
+
+    if (progress) {
+        progress.classList.add('complete');
+        setTimeout(() => {
+            progress.classList.remove('active');
+            progress.classList.add('hidden');
+        }, 700);
+    }
+}
+
 function resetWorkflow() {
     const roleSelect = document.getElementById('roleSelect');
+    const uploadJdBtn = document.getElementById('uploadJdBtn');
+    const jdProgress = document.getElementById('jdProgress');
+    const jdProgressStatus = document.getElementById('jdProgressStatus');
+    const jdProgressBarFill = document.getElementById('jdProgressBarFill');
+
     if (roleSelect && roleSelect.options.length) {
         roleSelect.value = roleSelect.options[0].value;
         workflowState.selectedRole = roleSelect.value;
@@ -555,6 +611,29 @@ function resetWorkflow() {
         const isActive = (toggle.dataset.tone || 'casual') === workflowState.tone;
         toggle.classList.toggle('active', isActive);
     });
+
+    if (uploadJdBtn) {
+        uploadJdBtn.style.display = '';
+    }
+
+    if (jdProgressTimeout) {
+        clearTimeout(jdProgressTimeout);
+        jdProgressTimeout = null;
+    }
+
+    if (jdProgress) {
+        jdProgress.classList.add('hidden');
+        jdProgress.classList.remove('active', 'complete');
+    }
+
+    if (jdProgressStatus) {
+        jdProgressStatus.textContent = 'Analyzing…';
+    }
+
+    if (jdProgressBarFill) {
+        jdProgressBarFill.style.transition = 'none';
+        jdProgressBarFill.style.width = '0%';
+    }
 
     setWorkflowStep(1);
     updateSelectedRoleText();
@@ -581,6 +660,7 @@ function openGmailComposer() {
     updateTabs();
     switchTab(gmailTab.id);
 
+    const composeData = getGmailComposeData();
     const existingView = document.getElementById(`webView-${gmailTab.id}`);
     if (!existingView) {
         const contentArea = document.querySelector('.content-area');
@@ -596,7 +676,6 @@ function openGmailComposer() {
 
         const composer = document.createElement('div');
         composer.className = 'gmail-composer';
-        const draftBody = getDraftTemplate();
         composer.innerHTML = `
             <div class="gmail-composer-header">
                 <span>New Message</span>
@@ -607,13 +686,13 @@ function openGmailComposer() {
             </div>
             <div class="gmail-composer-field">
                 <label>To</label>
-                <input type="text" value="jane.doe@example.com" />
+                <input type="text" value="${composeData.to}" />
             </div>
             <div class="gmail-composer-field">
                 <label>Subject</label>
-                <input type="text" value="${workflowState.selectedRole} opportunity" />
+                <input type="text" value="${composeData.subject}" />
             </div>
-            <textarea>${draftBody}</textarea>
+            <textarea>${composeData.body}</textarea>
             <div class="gmail-composer-footer">
                 <button class="gmail-send-btn">Send</button>
                 <div class="gmail-icons">
@@ -625,6 +704,7 @@ function openGmailComposer() {
 
         background.appendChild(composer);
         webView.appendChild(background);
+        renderGmailModal(webView, composeData);
 
         if (contentArea) {
             if (overlay && contentArea.contains(overlay)) {
@@ -639,12 +719,102 @@ function openGmailComposer() {
 
         const textarea = existingView.querySelector('.gmail-composer textarea');
         if (textarea) {
-            textarea.value = getDraftTemplate();
+            textarea.value = composeData.body;
         }
         const subjectInput = existingView.querySelector('.gmail-composer-field:nth-of-type(2) input');
         if (subjectInput) {
-            subjectInput.value = `${workflowState.selectedRole} opportunity`;
+            subjectInput.value = composeData.subject;
         }
+        const toInput = existingView.querySelector('.gmail-composer-field:nth-of-type(1) input');
+        if (toInput) {
+            toInput.value = composeData.to;
+        }
+        renderGmailModal(existingView, composeData);
+    }
+}
+
+function getGmailComposeData() {
+    return {
+        to: 'yash@gmail.com',
+        subject: `${workflowState.selectedRole} opportunity`,
+        body: getDraftTemplate()
+    };
+}
+
+function renderGmailModal(webView, composeData) {
+    if (!webView) return;
+    let overlay = webView.querySelector('.gmail-modal-overlay');
+    if (!overlay) {
+        overlay = document.createElement('div');
+        overlay.className = 'gmail-modal-overlay';
+        overlay.innerHTML = `
+            <div class="gmail-modal">
+                <div class="gmail-modal-header">
+                    <span>New Message</span>
+                    <div class="gmail-modal-header-actions">
+                        <button title="Minimize">-</button>
+                        <button title="Fullscreen">▢</button>
+                        <button title="Close" class="gmail-modal-close">×</button>
+                    </div>
+                </div>
+                <div class="gmail-modal-field">
+                    <label>To</label>
+                    <input type="text" class="gmail-modal-to" />
+                    <div class="cc-links">
+                        <span>Cc</span>
+                        <span>Bcc</span>
+                    </div>
+                </div>
+                <div class="gmail-modal-field">
+                    <label>Subject</label>
+                    <input type="text" class="gmail-modal-subject" />
+                </div>
+                <textarea class="gmail-modal-body"></textarea>
+                <div class="gmail-modal-footer">
+                    <button class="gmail-send-btn gmail-modal-send">Send</button>
+                    <div class="gmail-icons">
+                        <span class="gmail-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                                <path d="M21.44 11.05l-8.49 8.49a5 5 0 0 1-7.07-7.07l8.49-8.49a3 3 0 1 1 4.24 4.24l-8.49 8.49a1 1 0 0 1-1.41-1.41l7.78-7.78" />
+                            </svg>
+                        </span>
+                        <span class="gmail-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                                <circle cx="12" cy="12" r="9" />
+                                <path d="M8 14s1.5 2 4 2 4-2 4-2" />
+                                <line x1="9" y1="10" x2="9" y2="10" />
+                                <line x1="15" y1="10" x2="15" y2="10" />
+                            </svg>
+                        </span>
+                        <span class="gmail-icon">
+                            <svg viewBox="0 0 24 24" fill="none" stroke-width="1.8">
+                                <path d="M10 13a5 5 0 0 0 7.07 0l1.41-1.41a5 5 0 0 0-7.07-7.07L10 6" />
+                                <path d="M14 11a5 5 0 0 0-7.07 0L5.5 12.43a5 5 0 0 0 7.07 7.07L14 18" />
+                            </svg>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        `;
+        overlay.querySelector('.gmail-modal-close').addEventListener('click', () => {
+            overlay.remove();
+        });
+        webView.appendChild(overlay);
+    }
+
+    const toInput = overlay.querySelector('.gmail-modal-to');
+    const subjectInput = overlay.querySelector('.gmail-modal-subject');
+    const bodyArea = overlay.querySelector('.gmail-modal-body');
+    if (toInput) toInput.value = composeData.to;
+    if (subjectInput) subjectInput.value = composeData.subject;
+    if (bodyArea) bodyArea.value = composeData.body;
+
+    const sendBtn = overlay.querySelector('.gmail-modal-send');
+    if (sendBtn) {
+        sendBtn.onclick = () => {
+            overlay.remove();
+            showWorkflowToast('Email sent');
+        };
     }
 }
 

@@ -352,29 +352,33 @@
                     </div>
                   </div>
                   <div class="action-card">
-                    <label class="action-label" for="roleSelect"
-                      >Select a job role</label
-                    >
-                    <select id="roleSelect">
-                      <option value="Senior UX Designer">
-                        Senior UX Designer
-                      </option>
-                      <option value="Product Manager">Product Manager</option>
-                      <option value="React Developer">React Developer</option>
-                    </select>
-                    <div class="card-divider">or</div>
-                    <button class="upload-jd" id="uploadJdBtn">
-                      Upload JD
-                    </button>
-                    <button class="btn-primary" id="startScreeningBtn">
-                      Start Screening
-                    </button>
+                    <div class="chat-bubble ai">
+                      Share the JD and I’ll handle the screening flow for you.
+                    </div>
+                    <button class="upload-jd" id="uploadJdBtn">Upload JD</button>
+                    <div class="jd-progress hidden" id="jdProgress" aria-live="polite">
+                      <div class="jd-progress-header">
+                        <span>Processing your JD</span>
+                        <span class="jd-progress-status" id="jdProgressStatus"
+                          >Analyzing…</span
+                        >
+                      </div>
+                      <div class="jd-progress-bar">
+                        <div
+                          class="jd-progress-bar-fill"
+                          id="jdProgressBarFill"
+                        ></div>
+                      </div>
+                    </div>
                   </div>
                 </section>
 
                 <section class="workflow-step hidden" data-step="2" id="step2">
                   <div class="chat-thread">
-                    <div class="chat-bubble user" id="selectedRoleText">
+                    <div class="chat-bubble user">
+                      job_description.pdf
+                    </div>
+                    <div class="chat-bubble ai" id="selectedRoleText">
                       Let's screen for Senior UX Designer.
                     </div>
                     <div class="chat-bubble ai subtle">
@@ -385,16 +389,16 @@
                     <div class="analysis-header">
                       <div>
                         <p class="label">Analysis</p>
-                        <h4 id="selectedRoleSummary">Senior UX Designer</h4>
+                        <h5 id="selectedRoleSummary">Senior UX Designer</h5>
                       </div>
                       <div class="match-badge">88% Match</div>
                     </div>
                     <ul class="comparison-list">
                       <li class="match-item positive">
-                        ✅ Experience: 5 Years <span>(Req: 4+)</span>
+                        ✓ Experience: 5 Years <span>(Req: 4+)</span>
                       </li>
                       <li class="match-item positive">
-                        ✅ Skills: Figma, Design Systems
+                        ✓ Skills: Figma, Design Systems
                       </li>
                       <li class="match-item warning">
                         ⚠️ Location: New York <span>(Role is Remote)</span>
@@ -403,10 +407,10 @@
                   </div>
                   <div class="suggestion-chips">
                     <button class="chip-btn" id="checkGithubBtn">
-                      🔍 Check GitHub
+                      Check GitHub
                     </button>
                     <button class="chip-btn primary" id="draftEmailChip">
-                      ✍️ Draft Outreach Email
+                      Draft Outreach Email
                     </button>
                   </div>
                 </section>
@@ -422,10 +426,7 @@
                   </div>
                   <div class="draft-card">
                     <div class="draft-header">
-                      <div>
-                        <p class="label">Execution</p>
-                        <h4>Draft for Jane Doe</h4>
-                      </div>
+                        <h5>Draft mail</h5>
                       <span class="tone-label">Tone</span>
                       <div class="tone-toggle-group">
                         <button class="tone-toggle active" data-tone="casual">
@@ -441,14 +442,14 @@
                       rows="6"
                       aria-label="Draft outreach email"
                     >
-Hi Jane, I saw your work on Design Systems and think you'd be perfect for our Senior UX role. We use Figma extensively. Open to a chat?</textarea
+Hi Yash, I saw your work on Design Systems and think you'd be perfect for our Senior UX role. We use Figma extensively. Open to a chat?</textarea
                     >
                     <div class="draft-actions">
                       <button class="btn-secondary" id="regenerateDraftBtn">
                         Regenerate
                       </button>
                       <button class="btn-primary full-width" id="openGmailBtn">
-                        🚀 Open in Gmail
+                        Send Mail
                       </button>
                     </div>
                   </div>
