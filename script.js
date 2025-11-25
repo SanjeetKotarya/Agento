@@ -19,12 +19,24 @@ let analyticsData = {
     ]
 };
 
+let composerAttachments = [];
+
+const workflowState = {
+    currentStep: 1,
+    selectedRole: 'Senior UX Designer',
+    tone: 'casual'
+};
+
+let workflowToastTimeout = null;
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
     setupEventListeners();
     initializeCharts();
     updateAnalytics();
     initializeTabs();
+    initializeWorkflow();
+    setupComposerInput();
 });
 
 function initializeTabs() {
@@ -88,6 +100,7 @@ function createNewTab() {
     
     // Create web view container for new tab
     const contentArea = document.querySelector('.content-area');
+    const overlay = document.getElementById('webViewOverlay');
     const webView = document.createElement('div');
     webView.className = 'web-view-container';
     webView.id = `webView-${newTab.id}`;
@@ -100,7 +113,13 @@ function createNewTab() {
         img.style.display = 'none';
     };
     webView.appendChild(img);
-    contentArea.appendChild(webView);
+    if (contentArea) {
+        if (overlay && contentArea.contains(overlay)) {
+            contentArea.insertBefore(webView, overlay);
+        } else {
+            contentArea.appendChild(webView);
+        }
+    }
     
     updateTabs();
     switchTab(newTab.id);
@@ -188,6 +207,7 @@ function switchTab(tabId) {
             // Create if doesn't exist
             if (activeTab.image) {
                 const contentArea = document.querySelector('.content-area');
+                const overlay = document.getElementById('webViewOverlay');
                 const webView = document.createElement('div');
                 webView.className = 'web-view-container active';
                 webView.id = `webView-${activeTab.id}`;
@@ -200,7 +220,13 @@ function switchTab(tabId) {
                     img.style.display = 'none';
                 };
                 webView.appendChild(img);
-                contentArea.appendChild(webView);
+                if (contentArea) {
+                    if (overlay && contentArea.contains(overlay)) {
+                        contentArea.insertBefore(webView, overlay);
+                    } else {
+                        contentArea.appendChild(webView);
+                    }
+                }
             }
         }
         document.getElementById('analyticsBtn').classList.remove('active');
@@ -265,108 +291,361 @@ function closeWorkflowPanel() {
     btn.classList.remove('active');
 }
 
-function scanLinkedInProfile() {
-    const scanBtn = document.getElementById('scanBtn');
-    const scanStatusText = document.getElementById('scanStatusText');
-    
-    scanBtn.disabled = true;
-    scanStatusText.innerHTML = '<span class="loading"></span> Scanning profile...';
-    
-    // Simulate profile scanning
-    setTimeout(() => {
-        // Mock profile data (in real app, this would be extracted from the page)
-        const mockProfileData = {
-            name: 'John Doe',
-            title: 'Senior Software Engineer',
-            company: 'Tech Corp Inc.',
-            location: 'San Francisco, CA',
-            email: 'john.doe@techcorp.com',
-            experience: '8 years in software development, specializing in AI/ML'
+function initializeWorkflow() {
+    const roleSelect = document.getElementById('roleSelect');
+    const startButton = document.getElementById('startScreeningBtn');
+    const draftEmailChip = document.getElementById('draftEmailChip');
+    const checkGithubBtn = document.getElementById('checkGithubBtn');
+    const regenerateBtn = document.getElementById('regenerateDraftBtn');
+    const openGmailBtn = document.getElementById('openGmailBtn');
+    const uploadJdBtn = document.getElementById('uploadJdBtn');
+    const clearChatBtn = document.getElementById('clearChatBtn');
+
+    if (!roleSelect || !startButton) return;
+
+    startButton.addEventListener('click', () => {
+        workflowState.selectedRole = roleSelect.value;
+        updateSelectedRoleText();
+        setWorkflowStep(2);
+    });
+
+    if (uploadJdBtn) {
+        uploadJdBtn.addEventListener('click', () => {
+            showWorkflowToast('Upload JD coming soon');
+            console.log('Upload JD clicked');
+        });
+    }
+
+    if (draftEmailChip) {
+        draftEmailChip.addEventListener('click', () => {
+            setWorkflowStep(3);
+        });
+    }
+
+    if (checkGithubBtn) {
+        checkGithubBtn.addEventListener('click', () => {
+            showWorkflowToast('Checking GitHub...');
+            console.log('Checking GitHub...');
+        });
+    }
+
+    if (regenerateBtn) {
+        regenerateBtn.addEventListener('click', regenerateDraft);
+    }
+
+    if (openGmailBtn) {
+        openGmailBtn.addEventListener('click', () => {
+            openGmailComposer();
+        });
+    }
+
+    if (clearChatBtn) {
+        clearChatBtn.addEventListener('click', resetWorkflow);
+    }
+
+    document.querySelectorAll('.tone-toggle').forEach(toggle => {
+        toggle.addEventListener('click', () => {
+            document.querySelectorAll('.tone-toggle').forEach(btn => btn.classList.remove('active'));
+            toggle.classList.add('active');
+            workflowState.tone = toggle.dataset.tone || 'casual';
+            regenerateDraft();
+        });
+    });
+
+    setWorkflowStep(workflowState.currentStep);
+    updateSelectedRoleText();
+    regenerateDraft();
+}
+
+function setupComposerInput() {
+    const textarea = document.getElementById('footerComposer');
+    const attachmentBtn = document.getElementById('attachmentBtn');
+    const attachmentInput = document.getElementById('attachmentInput');
+    const attachmentPreview = document.getElementById('attachmentPreview');
+
+    if (textarea) {
+        const autoResize = () => {
+            textarea.style.height = 'auto';
+            textarea.style.height = Math.min(textarea.scrollHeight, 40) + 'px';
         };
-        
-        displayProfileData(mockProfileData);
-        scanStatusText.textContent = 'Profile scanned successfully!';
-        scanBtn.disabled = false;
-        
-        // Update analytics
-        analyticsData.profilesScanned++;
-        updateAnalytics();
-        
-        // Add activity
-        addActivity('Profile Scanned', mockProfileData.name, 'success');
-    }, 2000);
+        textarea.addEventListener('input', autoResize);
+        autoResize();
+    }
+
+    const renderAttachmentPreview = () => {
+        if (!attachmentPreview) return;
+        attachmentPreview.innerHTML = '';
+
+        composerAttachments.forEach(item => {
+            const chip = document.createElement('div');
+            chip.className = `attachment-chip ${item.type}`;
+
+            if (item.type === 'image') {
+                const img = document.createElement('img');
+                img.src = item.data;
+                img.alt = item.name;
+                chip.appendChild(img);
+            } else {
+                chip.textContent = formatAttachmentName(item.name);
+                chip.title = item.name;
+            }
+
+            const removeBtn = document.createElement('button');
+            removeBtn.className = 'remove-attachment';
+            removeBtn.type = 'button';
+            removeBtn.textContent = '×';
+            removeBtn.addEventListener('click', () => {
+                composerAttachments = composerAttachments.filter(att => att.id !== item.id);
+                renderAttachmentPreview();
+            });
+
+            chip.appendChild(removeBtn);
+            attachmentPreview.appendChild(chip);
+        });
+    };
+
+    if (attachmentBtn && attachmentInput) {
+        attachmentBtn.addEventListener('click', () => {
+            attachmentInput.value = '';
+            attachmentInput.click();
+        });
+
+        attachmentInput.addEventListener('change', () => {
+            const files = Array.from(attachmentInput.files || []);
+            if (!files.length) return;
+
+            files.forEach(file => {
+                const id = `att-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        composerAttachments.push({
+                            id,
+                            type: 'image',
+                            data: event.target.result,
+                            name: file.name
+                        });
+                        renderAttachmentPreview();
+                    };
+                    reader.readAsDataURL(file);
+                } else {
+                    composerAttachments.push({
+                        id,
+                        type: 'doc',
+                        name: file.name
+                    });
+                    renderAttachmentPreview();
+                }
+            });
+        });
+    }
+
+    renderAttachmentPreview();
 }
 
-function displayProfileData(data) {
-    document.getElementById('profileName').textContent = data.name;
-    document.getElementById('profileTitle').textContent = data.title;
-    document.getElementById('profileCompany').textContent = data.company;
-    document.getElementById('profileLocation').textContent = data.location;
-    document.getElementById('profileEmail').textContent = data.email;
-    document.getElementById('profileExperience').textContent = data.experience;
-    
-    document.getElementById('profileDataSection').style.display = 'block';
-    document.getElementById('emailSection').style.display = 'block';
-    
-    // Pre-fill email
-    document.getElementById('emailTo').value = data.email;
-    document.getElementById('emailSubject').value = `Connecting with ${data.name} - ${data.title} at ${data.company}`;
-    
-    // Generate initial message
-    generateAIMessage();
+function formatAttachmentName(name) {
+    if (!name) return '';
+    const dotIndex = name.lastIndexOf('.');
+    let base = name;
+    let ext = '';
+    if (dotIndex > 0) {
+        base = name.slice(0, dotIndex);
+        ext = name.slice(dotIndex + 1);
+    }
+    const truncated = base.length > 3 ? base.slice(0, 3) + '...' : base + '...';
+    return ext ? `${truncated}${ext}` : truncated;
 }
 
-function generateAIMessage() {
-    const name = document.getElementById('profileName').textContent;
-    const title = document.getElementById('profileTitle').textContent;
-    const company = document.getElementById('profileCompany').textContent;
-    
-    const message = `Hi ${name},
+function updateSelectedRoleText() {
+    const roleStatement = document.getElementById('selectedRoleText');
+    const roleSummary = document.getElementById('selectedRoleSummary');
+    const role = workflowState.selectedRole;
 
-I came across your profile and was impressed by your experience as a ${title} at ${company}. Your background in the industry aligns well with what we're working on.
-
-I'd love to connect and explore potential collaboration opportunities. Would you be open to a brief conversation?
-
-Best regards`;
-    
-    document.getElementById('emailMessage').value = message;
+    if (roleStatement) {
+        roleStatement.textContent = `Let's screen for ${role}.`;
+    }
+    if (roleSummary) {
+        roleSummary.textContent = role;
+    }
 }
 
-function sendEmail() {
-    const emailTo = document.getElementById('emailTo').value;
-    const emailSubject = document.getElementById('emailSubject').value;
-    const emailMessage = document.getElementById('emailMessage').value;
-    
-    if (!emailTo || !emailSubject || !emailMessage) {
-        alert('Please fill in all email fields');
-        return;
+function setWorkflowStep(step) {
+    workflowState.currentStep = step;
+    document.querySelectorAll('.workflow-step').forEach(section => {
+        const sectionStep = Number(section.dataset.step);
+        const shouldShow = sectionStep <= step;
+        if (shouldShow) {
+            section.classList.remove('hidden');
+            section.style.setProperty('--step-delay', `${Math.max(sectionStep - 1, 0) * 80}ms`);
+            if (!section.classList.contains('visible')) {
+                requestAnimationFrame(() => {
+                    section.classList.add('visible');
+                    section.dataset.shown = 'true';
+                    if (sectionStep === step) {
+                        setTimeout(() => scrollWorkflowToSection(section), 130);
+                    }
+                });
+            } else if (sectionStep === step) {
+                scrollWorkflowToSection(section);
+            }
+        } else {
+            section.classList.add('hidden');
+            section.classList.remove('visible');
+            section.removeAttribute('data-shown');
+            section.style.removeProperty('--step-delay');
+        }
+    });
+}
+
+function scrollWorkflowToSection(section) {
+    const container = document.getElementById('workflowPanel');
+    if (!container || !section) return;
+    const targetOffset = section.offsetTop - container.offsetTop;
+    container.scrollTo({
+        top: Math.max(targetOffset - 12, 0),
+        behavior: 'smooth'
+    });
+}
+
+function regenerateDraft() {
+    const textarea = document.getElementById('draftTextarea');
+    if (!textarea) return;
+    textarea.value = getDraftTemplate();
+}
+
+function getDraftTemplate() {
+    const role = workflowState.selectedRole || 'Senior UX role';
+
+    if (workflowState.tone === 'professional') {
+        return `Hello Jane,\n\nI'm reaching out because your background in Design Systems stands out for our ${role}. We rely on meticulous Figma workflows and believe your expertise could elevate the team. Would you be available for a short conversation this week?\n\nBest regards,`;
+    }
+
+    return `Hi Jane, I saw your work on Design Systems and think you'd be perfect for our ${role}. We use Figma extensively. Open to a chat?`;
+}
+
+function showWorkflowToast(message) {
+    const toast = document.getElementById('workflowToast');
+    if (!toast) return;
+
+    toast.textContent = message;
+    toast.classList.add('show');
+
+    if (workflowToastTimeout) {
+        clearTimeout(workflowToastTimeout);
+    }
+
+    workflowToastTimeout = setTimeout(() => {
+        toast.classList.remove('show');
+    }, 2200);
+}
+
+function resetWorkflow() {
+    const roleSelect = document.getElementById('roleSelect');
+    if (roleSelect && roleSelect.options.length) {
+        roleSelect.value = roleSelect.options[0].value;
+        workflowState.selectedRole = roleSelect.value;
+    } else {
+        workflowState.selectedRole = 'Senior UX Designer';
+    }
+
+    workflowState.currentStep = 1;
+    workflowState.tone = 'casual';
+
+    document.querySelectorAll('.tone-toggle').forEach(toggle => {
+        const isActive = (toggle.dataset.tone || 'casual') === workflowState.tone;
+        toggle.classList.toggle('active', isActive);
+    });
+
+    setWorkflowStep(1);
+    updateSelectedRoleText();
+    regenerateDraft();
+
+    showWorkflowToast('Chat cleared');
+}
+
+function openGmailComposer() {
+    let gmailTab = tabs.find(tab => tab.type === 'gmail');
+    if (!gmailTab) {
+        tabCounter++;
+        gmailTab = {
+            id: `tab-${tabCounter}`,
+            title: 'Gmail',
+            image: 'mail.png',
+            active: false,
+            type: 'gmail'
+        };
+        tabs.push(gmailTab);
     }
     
-    // Simulate sending email
-    const sendBtn = document.querySelector('.btn-primary');
-    const originalText = sendBtn.innerHTML;
-    sendBtn.disabled = true;
-    sendBtn.innerHTML = '<span class="loading"></span> Sending...';
-    
-    setTimeout(() => {
-        sendBtn.disabled = false;
-        sendBtn.innerHTML = originalText;
-        
-        // Show success message
-        alert('Email sent successfully!');
-        
-        // Update analytics
-        analyticsData.emailsSent++;
-        analyticsData.successRate = Math.round((analyticsData.emailsSent / analyticsData.profilesScanned) * 100);
-        updateAnalytics();
-        
-        // Add activity
-        const name = document.getElementById('profileName').textContent;
-        addActivity('Email Sent', name, 'success');
-        
-        // Reset form
-        document.getElementById('emailMessage').value = '';
-    }, 1500);
+    tabs.forEach(tab => tab.active = tab.id === gmailTab.id);
+    updateTabs();
+    switchTab(gmailTab.id);
+
+    const existingView = document.getElementById(`webView-${gmailTab.id}`);
+    if (!existingView) {
+        const contentArea = document.querySelector('.content-area');
+        const overlay = document.getElementById('webViewOverlay');
+        const webView = document.createElement('div');
+        webView.className = 'web-view-container gmail-view active';
+        webView.id = `webView-${gmailTab.id}`;
+        webView.dataset.tabId = gmailTab.id;
+
+        const background = document.createElement('div');
+        background.className = 'gmail-background';
+        background.style.backgroundImage = `url('${gmailTab.image}')`;
+
+        const composer = document.createElement('div');
+        composer.className = 'gmail-composer';
+        const draftBody = getDraftTemplate();
+        composer.innerHTML = `
+            <div class="gmail-composer-header">
+                <span>New Message</span>
+                <div class="gmail-composer-actions">
+                    <button title="Minimize">-</button>
+                    <button title="Close">×</button>
+                </div>
+            </div>
+            <div class="gmail-composer-field">
+                <label>To</label>
+                <input type="text" value="jane.doe@example.com" />
+            </div>
+            <div class="gmail-composer-field">
+                <label>Subject</label>
+                <input type="text" value="${workflowState.selectedRole} opportunity" />
+            </div>
+            <textarea>${draftBody}</textarea>
+            <div class="gmail-composer-footer">
+                <button class="gmail-send-btn">Send</button>
+                <div class="gmail-icons">
+                    <span>Attach</span>
+                    <span>Emoji</span>
+                </div>
+            </div>
+        `;
+
+        background.appendChild(composer);
+        webView.appendChild(background);
+
+        if (contentArea) {
+            if (overlay && contentArea.contains(overlay)) {
+                contentArea.insertBefore(webView, overlay);
+            } else {
+                contentArea.appendChild(webView);
+            }
+        }
+    } else {
+        updateTabs();
+        switchTab(gmailTab.id);
+
+        const textarea = existingView.querySelector('.gmail-composer textarea');
+        if (textarea) {
+            textarea.value = getDraftTemplate();
+        }
+        const subjectInput = existingView.querySelector('.gmail-composer-field:nth-of-type(2) input');
+        if (subjectInput) {
+            subjectInput.value = `${workflowState.selectedRole} opportunity`;
+        }
+    }
 }
 
 // Analytics

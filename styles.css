@@ -426,6 +426,8 @@ body {
     min-height: 600px;
     background: white;
     overflow: hidden;
+    display: flex;
+    align-items: stretch;
 }
 
 .web-view-container {
@@ -436,6 +438,9 @@ body {
     overflow-y: auto;
     overflow-x: hidden;
     background: #f5f5f5;
+    flex: 1 1 auto;
+    transition: flex-basis 0.3s ease;
+    order: 1;
 }
 
 .web-view-container.active {
@@ -456,37 +461,294 @@ body {
     object-fit: contain;
 }
 
-.web-view-overlay {
+.web-view-container.gmail-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    position: relative;
+}
+
+.gmail-background {
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    align-items: flex-end;
+    justify-content: flex-end;
+    padding: 32px;
+}
+
+.gmail-composer {
+    width: 420px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    font-family: 'Inter', sans-serif;
+}
+
+.gmail-composer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f4f4f4;
+    font-weight: 600;
+    color: #3c4043;
+    font-size: 14px;
+}
+
+.gmail-composer-actions button {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    margin-left: 8px;
+    cursor: pointer;
+    color: #5f6368;
+}
+
+.gmail-composer-field {
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e0e0e0;
+    padding: 8px 16px;
+    gap: 12px;
+}
+
+.gmail-composer-field label {
+    width: 48px;
+    color: #5f6368;
+    font-size: 13px;
+}
+
+.gmail-composer-field input {
+    border: none;
+    flex: 1;
+    font-size: 14px;
+    color: #202124;
+    outline: none;
+}
+
+.gmail-composer textarea {
+    border: none;
+    height: 240px;
+    padding: 16px;
+    resize: none;
+    font-size: 14px;
+    color: #202124;
+    line-height: 1.5;
+    outline: none;
+}
+
+.gmail-composer-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 16px;
+    border-top: 1px solid #e0e0e0;
+}
+
+.gmail-send-btn {
+    background: #1a73e8;
+    color: white;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 24px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.gmail-icons {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    color: #5f6368;
+    font-size: 13px;
+}
+
+.gmail-modal-overlay {
     position: absolute;
-    top: 0;
-    right: 0;
-    width: 400px;
+    inset: 0;
+    background: rgba(33, 33, 33, 0.35);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    z-index: 3;
+}
+
+.gmail-modal {
+    width: 540px;
+    max-width: 100%;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.35);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border: 1px solid #dadce0;
+}
+
+.gmail-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    background: #f4f4f4;
+    font-weight: 600;
+    color: #3c4043;
+}
+
+.gmail-modal-header-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.gmail-modal-header-actions button {
+    border: none;
+    background: transparent;
+    font-size: 16px;
+    cursor: pointer;
+    color: #5f6368;
+}
+
+.gmail-modal-field {
+    padding: 10px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.gmail-modal-field label {
+    width: 56px;
+    color: #5f6368;
+    font-size: 13px;
+}
+
+.gmail-modal-field input {
+    border: none;
+    flex: 1;
+    font-size: 14px;
+    color: #202124;
+    outline: none;
+}
+
+.gmail-modal-field .cc-links {
+    margin-left: auto;
+    display: flex;
+    gap: 12px;
+    color: #1a73e8;
+    font-size: 12px;
+    cursor: pointer;
+}
+
+.gmail-modal textarea {
+    border: none;
+    padding: 16px;
+    min-height: 220px;
+    resize: none;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #202124;
+    outline: none;
+}
+
+.gmail-modal-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 16px;
+    border-top: 1px solid #e0e0e0;
+    background: #f8f9fa;
+}
+
+.gmail-modal-footer .gmail-send-btn {
+    padding: 8px 24px;
+}
+
+.gmail-modal-footer .gmail-icons span {
+    cursor: pointer;
+}
+
+.web-view-overlay {
+    position: relative;
+    width: 0;
     height: 100%;
     background: white;
     box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
-    transform: translateX(100%);
-    transition: transform 0.3s ease;
-    overflow-y: auto;
+    border-left: solid #dadce0 1px;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    flex: 0 0 0;
+    opacity: 0;
+    pointer-events: none;
+    transition: flex-basis 0.3s ease, width 0.3s ease, opacity 0.2s ease;
+    order: 2;
 }
 
 .web-view-overlay.active {
-    transform: translateX(0);
+    width: 400px;
+    flex: 0 0 400px;
+    opacity: 1;
+    pointer-events: auto;
 }
 
 /* AI Workflow Panel */
 .ai-workflow-panel {
-    padding: 20px;
+    padding: 10px;
     height: 100%;
+    flex: 1;
+    overflow-y: auto;
+    position: relative;
+    scrollbar-width: none; /* Hide Firefox scrollbar */
+}
+
+.ai-workflow-panel::-webkit-scrollbar {
+    width: 0;
+    height: 0;
 }
 
 .workflow-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
+    margin-bottom: 0;
     border-bottom: 1px solid #e0e0e0;
+    padding: 5px 10px;
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 2;
+}
+
+.workflow-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.clear-chat-btn {
+    border: 1px solid #dadce0;
+    background: white;
+    color: #1a73e8;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s, color 0.2s;
+}
+
+.clear-chat-btn:hover {
+    border-color: #1a73e8;
+    background: #e8f0fe;
 }
 
 .workflow-header h3 {
@@ -503,7 +765,7 @@ body {
     cursor: pointer;
     color: #5f6368;
     font-size: 24px;
-    border-radius: 4px;
+    border-radius: 100%;
     transition: background 0.2s;
 }
 
@@ -517,144 +779,288 @@ body {
     gap: 24px;
 }
 
-.scan-status {
-    display: flex;
-    gap: 12px;
-    padding: 16px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-}
-
-.status-icon {
-    width: 48px;
-    height: 48px;
-    background: #e3f2fd;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #1976d2;
-    flex-shrink: 0;
-}
-
-.status-text h4 {
-    font-size: 14px;
-    color: #202124;
-    margin-bottom: 4px;
-    font-weight: 600;
-}
-
-.status-text p {
-    font-size: 13px;
-    color: #5f6368;
-}
-
-.scan-btn {
-    width: 100%;
-    padding: 12px 16px;
-    background: #1a73e8;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    transition: background 0.2s;
-}
-
-.scan-btn:hover {
-    background: #1557b0;
-}
-
-.scan-btn:disabled {
-    background: #dadce0;
-    cursor: not-allowed;
-}
-
-.profile-data-section,
-.email-composition-section {
-    padding: 16px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    border: 1px solid #e0e0e0;
-}
-
-.profile-data-section h4,
-.email-composition-section h4 {
-    font-size: 16px;
-    color: #202124;
-    margin-bottom: 16px;
-    font-weight: 600;
-}
-
-.profile-data-grid {
-    display: grid;
-    gap: 12px;
-}
-
-.data-item {
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-}
-
-.data-item label {
-    font-size: 12px;
-    color: #5f6368;
-    font-weight: 500;
-}
-
-.data-item span {
-    font-size: 14px;
-    color: #202124;
-}
-
-.email-form {
+.workflow-step {
     display: flex;
     flex-direction: column;
     gap: 16px;
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 0.35s ease, transform 0.35s ease;
+    transition-delay: var(--step-delay, 0ms);
 }
 
-.form-group {
+.hidden {
+    display: none !important;
+}
+
+.workflow-step.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.chat-thread {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.form-group label {
-    font-size: 13px;
-    color: #5f6368;
-    font-weight: 500;
+.chat-bubble {
+    padding: 8px 10px;
+    border-radius: 20px;
+    border-bottom-left-radius: 0;
+    font-size: 14px;
+    line-height: 1.5;
+    color: #202124;
+    max-width: 80%;
 }
 
-.form-group input,
-.form-group textarea {
-    padding: 10px 12px;
+.chat-bubble.ai {
+    background: #F0F0F4;
+    position: relative;
+}
+
+.chat-bubble.ai.subtle {
+    background: #F0F0F4;
+    color: #5f6368;
+}
+
+.chat-bubble.ai::after {
+    content: '⋮';
+    position: absolute;
+    right: -20px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 16px;
+    color: #9aa0a6;
+    cursor: pointer;
+    padding: 0 5px;
+}
+
+.chat-bubble.user {
+    background: #e8f0fe;
+    color: #1a73e8;
+    align-self: flex-end;
+    border-radius: 20px;
+    border-bottom-right-radius: 0;
+}
+
+.action-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    background: white;
+}
+
+.action-label {
+    font-size: 13px;
+    font-weight: 500;
+    color: #5f6368;
+}
+
+.action-card select {
     border: 1px solid #dadce0;
-    border-radius: 4px;
+    border-radius: 8px;
+    padding: 10px 12px;
     font-size: 14px;
     font-family: inherit;
     color: #202124;
-    transition: border-color 0.2s;
 }
 
-.form-group input:focus,
-.form-group textarea:focus {
+.action-card select:focus {
     outline: none;
     border-color: #1a73e8;
 }
 
-.form-group input[readonly] {
-    background: #f8f9fa;
-    cursor: not-allowed;
+.card-divider {
+    text-transform: uppercase;
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-align: center;
+    color: #9aa0a6;
 }
 
-.email-actions {
+.upload-jd {
+    border: 1px dashed #dadce0;
+    border-radius: 8px;
+    padding: 12px;
+    background: white;
+    color: #1a73e8;
+    font-weight: 600;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-jd:hover {
+    border-color: #1a73e8;
+    background: #f8fbff;
+}
+
+.action-card .btn-primary {
+    width: 100%;
+    flex: none;
+}
+
+.analysis-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    background: #fafbff;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.analysis-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.analysis-header .label {
+    font-size: 12px;
+    text-transform: uppercase;
+    color: #9aa0a6;
+    letter-spacing: 0.1em;
+    margin-bottom: 4px;
+}
+
+.match-badge {
+    background: #e6f4ea;
+    color: #188038;
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-weight: 600;
+    font-size: 13px;
+}
+
+.comparison-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 14px;
+}
+
+.match-item {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
+    align-items: center;
+    padding: 10px 12px;
+    border-radius: 10px;
+}
+
+.match-item span {
+    font-size: 13px;
+    color: #5f6368;
+}
+
+.match-item.positive {
+    background: #f1f8e9;
+}
+
+.match-item.warning {
+    background: #fff8e1;
+}
+
+.suggestion-chips {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.chip-btn {
+    border: 1px solid #dadce0;
+    border-radius: 999px;
+    padding: 8px 14px;
+    font-size: 13px;
+    background: white;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.chip-btn.primary {
+    background: #e8f0fe;
+    border-color: #c6dafc;
+    color: #1a73e8;
+    font-weight: 600;
+}
+
+.chip-btn:hover {
+    border-color: #1a73e8;
+}
+
+.draft-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    padding: 16px;
+    background: white;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.draft-header {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.tone-label {
+    font-size: 12px;
+    color: #5f6368;
+    font-weight: 600;
+}
+
+.tone-toggle-group {
+    display: inline-flex;
+    padding: 4px;
+    border: 1px solid #dadce0;
+    border-radius: 999px;
+    gap: 4px;
+}
+
+.tone-toggle {
+    border: none;
+    background: transparent;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 12px;
+    cursor: pointer;
+    color: #5f6368;
+    transition: background 0.2s, color 0.2s;
+}
+
+.tone-toggle.active {
+    background: #1a73e8;
+    color: white;
+}
+
+.draft-card textarea {
+    width: 100%;
+    border: 1px solid #dadce0;
+    border-radius: 8px;
+    padding: 12px;
+    font-size: 14px;
+    font-family: inherit;
+    resize: none;
+    min-height: 56px;
+    max-height: 200px;
+}
+
+.draft-card textarea:focus {
+    outline: none;
+    border-color: #1a73e8;
+}
+
+.draft-actions {
     display: flex;
     gap: 8px;
 }
@@ -693,6 +1099,204 @@ body {
     background: #e8eaed;
 }
 
+.btn-primary.full-width {
+    width: 100%;
+}
+
+.workflow-footer {
+    padding: 10px;
+    position: sticky;
+    bottom: 0;
+    background: white;
+}
+
+.footer-composer {
+    margin-top: 2px;
+    display: flex;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 4px 0;
+}
+
+.attachment-btn {
+    border: none;
+    background: #f1f3f4;
+    color: #5f6368;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.attachment-btn:hover {
+    background: #e8eaed;
+    color: #1a73e8;
+}
+
+.attachment-preview {
+    flex: 1;
+    min-height: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: #5f6368;
+}
+
+.attachment-preview .attachment-chip {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    padding: 0;
+    background: #f1f3f4;
+    border: 1px solid #dadce0;
+    overflow: visible;
+}
+
+.attachment-preview .attachment-chip.image {
+    width: 30px;
+    height: 30px;
+    padding: 0;
+}
+
+.attachment-preview .attachment-chip.image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.attachment-preview .attachment-chip.doc {
+    padding: 6px 12px;
+    font-weight: 600;
+    color: #202124;
+    background: #fff;
+}
+
+.remove-attachment {
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid white;
+    background: #fc3523;
+    color: white;
+    font-size: 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.25);
+    z-index: 2;
+    transition: transform 0.2s;
+}
+
+.remove-attachment:hover {
+    transform: scale(1.05);
+}
+
+
+.input-area{
+    background: white;
+    box-shadow: 0 8px 20px rgba(32, 33, 36, 0.08);
+    border: 1px solid #dadce0;
+    padding: 6px 8px;
+    border-radius: 14px;
+}
+
+
+.footer-input {
+    flex: 1;
+    display: flex;
+    align-items: flex-end;    
+    
+}
+
+.footer-input textarea {
+    padding: 2px 0;
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: 14px;
+    color: #202124;
+    resize: none;
+    overflow: hidden;
+    min-height: 30px;
+    max-height: 200px;
+    line-height: 1.3;
+}
+
+.footer-input textarea:focus {
+    outline: none;
+}
+
+.footer-actions {
+    display: flex;
+    gap: 8px;
+}
+
+.footer-icon-btn,
+.footer-send-btn {
+    border: none;
+    background: transparent;
+    color: #5f6368;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: background 0.2s, color 0.2s;
+}
+
+.footer-icon-btn:hover {
+    background: #f1f3f4;
+}
+
+.footer-send-btn {
+    background: #e8f0fe;
+    color: #1a73e8;
+}
+
+.footer-send-btn:hover {
+    background: #d2e3fc;
+}
+
+
+
+
+.workflow-toast {
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translate(-50%, -20px);
+    padding: 5px 8px;
+    background: #1a73e8;
+    color: white;
+    border-radius: 999px;
+    font-size: 13px;
+    opacity: 0;
+    box-shadow: 0 10px 30px rgba(26, 115, 232, 0.35);
+    transition: opacity 0.3s ease, transform 0.3s ease;
+    pointer-events: none;
+    z-index: 5;
+}
+
+.workflow-toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+}
+
 /* Analytics View */
 .analytics-view {
     width: 100%;
@@ -700,6 +1304,8 @@ body {
     background: #f8f9fa;
     overflow-y: auto;
     padding: 24px;
+    flex: 1 1 auto;
+    order: 1;
 }
 
 .analytics-container {
@@ -937,13 +1543,34 @@ body {
 
 /* Responsive */
 @media (max-width: 768px) {
-    .web-view-overlay {
+    .content-area {
+        flex-direction: column;
+    }
+
+    .web-view-overlay.active {
         width: 100%;
+        flex: 0 0 100%;
     }
     
     .analytics-grid,
     .analytics-charts,
     .insights-grid {
         grid-template-columns: 1fr;
+    }
+}
+
+
+.workflow-brand{
+    width: 80px;
+    height: fit-content;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    padding: 0;
+    img{
+        width: 100%;
+        height: auto;
+        margin: 0;
     }
 }

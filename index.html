@@ -52,25 +52,34 @@
             </button>
 
             <button class="window-control-btn maximize" title="Maximize">
-                <svg width="10" height="10" viewBox="0 0 99.000000 99.000000"
-                preserveAspectRatio="xMidYMid meet">
-               
-               <g transform="translate(0.000000,99.000000) scale(0.100000,-0.100000)"
-               fill="currentColor" stroke="none">
-               <path d="M150 936 l0 -35 338 -3 c370 -3 368 -3 397 -64 12 -26 15 -87 15
+              <svg
+                width="10"
+                height="10"
+                viewBox="0 0 99.000000 99.000000"
+                preserveAspectRatio="xMidYMid meet"
+              >
+                <g
+                  transform="translate(0.000000,99.000000) scale(0.100000,-0.100000)"
+                  fill="currentColor"
+                  stroke="none"
+                >
+                  <path
+                    d="M150 936 l0 -35 338 -3 c370 -3 368 -3 397 -64 12 -26 15 -87 15
                -339 l0 -306 38 3 37 3 0 326 0 326 -28 41 c-15 23 -45 51 -67 62 -37 19 -58
-               20 -385 20 l-345 0 0 -34z"/>
-               <path d="M88 853 c-14 -9 -36 -33 -47 -54 -20 -35 -21 -51 -21 -340 0 -296 1
+               20 -385 20 l-345 0 0 -34z"
+                  />
+                  <path
+                    d="M88 853 c-14 -9 -36 -33 -47 -54 -20 -35 -21 -51 -21 -340 0 -296 1
                -305 23 -343 13 -23 38 -48 62 -60 37 -19 59 -21 303 -24 308 -4 356 3 407 54
                19 19 35 43 35 54 0 10 5 22 10 25 6 4 10 109 10 284 l0 277 -26 52 c-46 93
                -42 92 -410 92 -279 0 -322 -3 -346 -17z m674 -72 l33 -29 3 -263 c2 -159 -1
                -271 -7 -283 -5 -12 -12 -33 -15 -47 -4 -18 -18 -32 -41 -43 -31 -15 -70 -17
                -315 -14 l-280 3 -27 28 -28 27 -3 268 c-4 289 1 327 45 361 25 20 38 21 314
-               21 l289 0 32 -29z"/>
-               </g>
-               </svg>
-              </button>
-
+               21 l289 0 32 -29z"
+                  />
+                </g>
+              </svg>
+            </button>
 
             <button class="window-control-btn close" title="Close">
               <svg
@@ -191,8 +200,8 @@
               title="AI Assistant"
             >
               <svg
-                width="18"
-                height="18"
+                width="15"
+                height="15"
                 viewBox="0 0 230.000000 230.000000"
                 preserveAspectRatio="xMidYMid meet"
               >
@@ -320,39 +329,149 @@
 
           <!-- AI Assistant Sidebar (Fixed) -->
           <div class="web-view-overlay" id="webViewOverlay">
-            <div class="ai-workflow-panel" id="workflowPanel">
-              <div class="workflow-header">
-                <h3>LinkedIn Outreach Assistant</h3>
+            <div class="workflow-header">
+              <div class="workflow-brand">
+                <img src="logo.png" alt="Agento" />
+              </div>
+              <div class="workflow-header-actions">
+                <button class="clear-chat-btn" id="clearChatBtn">
+                  Clear chat
+                </button>
                 <button class="close-panel" onclick="closeWorkflowPanel()">
                   ×
                 </button>
               </div>
+            </div>
+            <div class="ai-workflow-panel" id="workflowPanel">
               <div class="workflow-content">
-                <div class="profile-scan-section">
-                  <div class="scan-status" id="scanStatus">
-                    <div class="status-icon">
-                      <svg
-                        width="24"
-                        height="24"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <path
-                          d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-                        />
-                      </svg>
-                    </div>
-                    <div class="status-text">
-                      <h4>Profile Scan Status</h4>
-                      <p id="scanStatusText">Ready to scan LinkedIn profile</p>
+                <section class="workflow-step" data-step="1" id="step1">
+                  <div class="chat-thread">
+                    <div class="chat-bubble ai">
+                      I've detected a candidate profile. Which role should I
+                      screen for?
                     </div>
                   </div>
+                  <div class="action-card">
+                    <label class="action-label" for="roleSelect"
+                      >Select a job role</label
+                    >
+                    <select id="roleSelect">
+                      <option value="Senior UX Designer">
+                        Senior UX Designer
+                      </option>
+                      <option value="Product Manager">Product Manager</option>
+                      <option value="React Developer">React Developer</option>
+                    </select>
+                    <div class="card-divider">or</div>
+                    <button class="upload-jd" id="uploadJdBtn">
+                      Upload JD
+                    </button>
+                    <button class="btn-primary" id="startScreeningBtn">
+                      Start Screening
+                    </button>
+                  </div>
+                </section>
+
+                <section class="workflow-step hidden" data-step="2" id="step2">
+                  <div class="chat-thread">
+                    <div class="chat-bubble user" id="selectedRoleText">
+                      Let's screen for Senior UX Designer.
+                    </div>
+                    <div class="chat-bubble ai subtle">
+                      Perfect. Running the match against the profile now.
+                    </div>
+                  </div>
+                  <div class="analysis-card">
+                    <div class="analysis-header">
+                      <div>
+                        <p class="label">Analysis</p>
+                        <h4 id="selectedRoleSummary">Senior UX Designer</h4>
+                      </div>
+                      <div class="match-badge">88% Match</div>
+                    </div>
+                    <ul class="comparison-list">
+                      <li class="match-item positive">
+                        ✅ Experience: 5 Years <span>(Req: 4+)</span>
+                      </li>
+                      <li class="match-item positive">
+                        ✅ Skills: Figma, Design Systems
+                      </li>
+                      <li class="match-item warning">
+                        ⚠️ Location: New York <span>(Role is Remote)</span>
+                      </li>
+                    </ul>
+                  </div>
+                  <div class="suggestion-chips">
+                    <button class="chip-btn" id="checkGithubBtn">
+                      🔍 Check GitHub
+                    </button>
+                    <button class="chip-btn primary" id="draftEmailChip">
+                      ✍️ Draft Outreach Email
+                    </button>
+                  </div>
+                </section>
+
+                <section class="workflow-step hidden" data-step="3" id="step3">
+                  <div class="chat-thread">
+                    <div class="chat-bubble user">
+                      Draft an outreach email for this candidate.
+                    </div>
+                    <div class="chat-bubble ai subtle">
+                      Draft ready. Adjust tone or send directly.
+                    </div>
+                  </div>
+                  <div class="draft-card">
+                    <div class="draft-header">
+                      <div>
+                        <p class="label">Execution</p>
+                        <h4>Draft for Jane Doe</h4>
+                      </div>
+                      <span class="tone-label">Tone</span>
+                      <div class="tone-toggle-group">
+                        <button class="tone-toggle active" data-tone="casual">
+                          Casual
+                        </button>
+                        <button class="tone-toggle" data-tone="professional">
+                          Professional
+                        </button>
+                      </div>
+                    </div>
+                    <textarea
+                      id="draftTextarea"
+                      rows="6"
+                      aria-label="Draft outreach email"
+                    >
+Hi Jane, I saw your work on Design Systems and think you'd be perfect for our Senior UX role. We use Figma extensively. Open to a chat?</textarea
+                    >
+                    <div class="draft-actions">
+                      <button class="btn-secondary" id="regenerateDraftBtn">
+                        Regenerate
+                      </button>
+                      <button class="btn-primary full-width" id="openGmailBtn">
+                        🚀 Open in Gmail
+                      </button>
+                    </div>
+                  </div>
+                </section>
+              </div>
+            </div>
+            <div class="workflow-toast" id="workflowToast" role="status"></div>
+
+            <div class="workflow-footer">
+              <div class="input-area">
+                <div class="footer-input">
+                  <textarea
+                    id="footerComposer"
+                    rows="1"
+                    placeholder="How can I help you today?"
+                    aria-label="Ask Agento"
+                  ></textarea>
+                </div>
+                <div class="footer-composer">
                   <button
-                    class="scan-btn"
-                    id="scanBtn"
-                    onclick="scanLinkedInProfile()"
+                    class="attachment-btn"
+                    id="attachmentBtn"
+                    title="Attach file"
                   >
                     <svg
                       width="18"
@@ -362,114 +481,43 @@
                       stroke="currentColor"
                       stroke-width="2"
                     >
-                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-                      <polyline points="17 8 12 3 7 8" />
-                      <line x1="12" y1="3" x2="12" y2="15" />
+                      <path
+                        d="M21.44 11.05l-8.49 8.49a5 5 0 0 1-7.07-7.07l8.49-8.49a3 3 0 0 1 4.24 4.24l-8.49 8.49a1 1 0 0 1-1.41-1.41l7.78-7.78"
+                      ></path>
                     </svg>
-                    Scan Profile
                   </button>
-                </div>
+                  <div class="attachment-preview" id="attachmentPreview"></div>
+                  <input type="file" id="attachmentInput" hidden multiple />
 
-                <div
-                  class="profile-data-section"
-                  id="profileDataSection"
-                  style="display: none"
-                >
-                  <h4>Extracted Profile Data</h4>
-                  <div class="profile-data-grid">
-                    <div class="data-item">
-                      <label>Name:</label>
-                      <span id="profileName">-</span>
-                    </div>
-                    <div class="data-item">
-                      <label>Title:</label>
-                      <span id="profileTitle">-</span>
-                    </div>
-                    <div class="data-item">
-                      <label>Company:</label>
-                      <span id="profileCompany">-</span>
-                    </div>
-                    <div class="data-item">
-                      <label>Location:</label>
-                      <span id="profileLocation">-</span>
-                    </div>
-                    <div class="data-item">
-                      <label>Email:</label>
-                      <span id="profileEmail">-</span>
-                    </div>
-                    <div class="data-item">
-                      <label>Experience:</label>
-                      <span id="profileExperience">-</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  class="email-composition-section"
-                  id="emailSection"
-                  style="display: none"
-                >
-                  <h4>Compose Outreach Email</h4>
-                  <div class="email-form">
-                    <div class="form-group">
-                      <label>To:</label>
-                      <input
-                        type="email"
-                        id="emailTo"
-                        placeholder="email@example.com"
-                        readonly
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label>Subject:</label>
-                      <input
-                        type="text"
-                        id="emailSubject"
-                        placeholder="Email subject"
-                      />
-                    </div>
-                    <div class="form-group">
-                      <label>Message:</label>
-                      <textarea
-                        id="emailMessage"
-                        rows="8"
-                        placeholder="Your outreach message..."
-                      ></textarea>
-                    </div>
-                    <div class="email-actions">
-                      <button
-                        class="btn-secondary"
-                        onclick="generateAIMessage()"
+                  <div class="footer-actions">
+                    <button class="footer-icon-btn" title="Voice input">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
                       >
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                        >
-                          <path
-                            d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"
-                          />
-                        </svg>
-                        Generate with AI
-                      </button>
-                      <button class="btn-primary" onclick="sendEmail()">
-                        <svg
-                          width="16"
-                          height="16"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                          stroke-width="2"
-                        >
-                          <line x1="22" y1="2" x2="11" y2="13" />
-                          <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                        </svg>
-                        Send Email
-                      </button>
-                    </div>
+                        <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+                        <path d="M5 10v2a7 7 0 0 0 14 0v-2"></path>
+                        <line x1="12" y1="19" x2="12" y2="22"></line>
+                        <line x1="8" y1="22" x2="16" y2="22"></line>
+                      </svg>
+                    </button>
+                    <button class="footer-send-btn" title="Send prompt">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      >
+                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                      </svg>
+                    </button>
                   </div>
                 </div>
               </div>
