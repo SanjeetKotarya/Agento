@@ -22,7 +22,7 @@ let analyticsData = {
 let composerAttachments = [];
 
 const workflowState = {
-    currentStep: 1,
+    currentStep: 0,
     selectedRole: 'Senior UX Designer',
     tone: 'casual'
 };
@@ -278,21 +278,42 @@ function updateTabs() {
 // LinkedIn Workflow
 function toggleWorkflowPanel() {
     const overlay = document.getElementById('webViewOverlay');
-    overlay.classList.toggle('active');
-    
     const btn = document.getElementById('aiAssistantBtn');
-    btn.classList.toggle('active');
+    // toggle and determine current active state
+    const isActive = overlay.classList.toggle('active');
+    if (btn) btn.classList.toggle('active', isActive);
+    // show or hide the suggestion bubble when sidebar opens/closes
+    showSuggestionBubble(isActive);
 }
 
-function closeWorkflowPanel() {
-    const overlay = document.getElementById('webViewOverlay');
-    overlay.classList.remove('active');
-    
-    const btn = document.getElementById('aiAssistantBtn');
-    btn.classList.remove('active');
+
+
+// Show or hide the suggestion bubble that pops out near the footer input
+function showSuggestionBubble(show) {
+    const btn = document.querySelector('.suggestion-btn');
+    if (!btn) return;
+
+    if (show) {
+        // ensure visible and animate
+        btn.classList.remove('bubble-hidden');
+        btn.style.display = 'inline-flex';
+        // force reflow then add visible class to trigger animation
+        void btn.offsetWidth;
+        btn.classList.add('bubble-visible');
+        // remove any leftover hidden state
+        setTimeout(() => btn.classList.remove('bubble-hidden'), 400);
+    } else {
+        // fade out then hide
+        btn.classList.remove('bubble-visible');
+        btn.classList.add('bubble-hidden');
+        setTimeout(() => {
+            btn.style.display = 'none';
+        }, 320);
+    }
 }
 
 function initializeWorkflow() {
+    const scanPageBtn = document.getElementById('scanPageBtn');
     const roleSelect = document.getElementById('roleSelect');
     const startButton = document.getElementById('startScreeningBtn');
     const draftEmailChip = document.getElementById('draftEmailChip');
@@ -301,6 +322,14 @@ function initializeWorkflow() {
     const openGmailBtn = document.getElementById('openGmailBtn');
     const uploadJdBtn = document.getElementById('uploadJdBtn');
     const clearChatBtn = document.getElementById('clearChatBtn');
+
+    if (scanPageBtn) {
+        scanPageBtn.addEventListener('click', (e) => {
+            // hide the suggestion bubble when user clicks
+            showSuggestionBubble(false);
+            setWorkflowStep(1);
+        });
+    }
 
     if (roleSelect && startButton) {
         startButton.addEventListener('click', () => {
@@ -353,7 +382,7 @@ function initializeWorkflow() {
         });
     });
 
-    setWorkflowStep(workflowState.currentStep);
+    setWorkflowStep(0);
     updateSelectedRoleText();
     regenerateDraft();
 }
@@ -474,7 +503,15 @@ function setWorkflowStep(step) {
     workflowState.currentStep = step;
     document.querySelectorAll('.workflow-step').forEach(section => {
         const sectionStep = Number(section.dataset.step);
-        const shouldShow = sectionStep <= step;
+        // Keep steps cumulative for steps >= 1 (show all previous steps),
+        // but treat step-0 as the intro/welcome which should only be
+        // visible when current step is 0.
+        let shouldShow;
+        if (sectionStep === 0) {
+            shouldShow = (step === 0);
+        } else {
+            shouldShow = sectionStep <= step;
+        }
         if (shouldShow) {
             section.classList.remove('hidden');
             section.style.setProperty('--step-delay', `${Math.max(sectionStep - 1, 0) * 80}ms`);
@@ -604,7 +641,7 @@ function resetWorkflow() {
         workflowState.selectedRole = 'Senior UX Designer';
     }
 
-    workflowState.currentStep = 1;
+    workflowState.currentStep = 0;
     workflowState.tone = 'casual';
 
     document.querySelectorAll('.tone-toggle').forEach(toggle => {
@@ -635,11 +672,12 @@ function resetWorkflow() {
         jdProgressBarFill.style.width = '0%';
     }
 
-    setWorkflowStep(1);
+    setWorkflowStep(0);
     updateSelectedRoleText();
     regenerateDraft();
-
-    showWorkflowToast('Chat cleared');
+    showWorkflowToast('New chat');
+    // show the suggestion bubble again when the chat is cleared
+    showSuggestionBubble(true);
 }
 
 function openGmailComposer() {
@@ -736,7 +774,7 @@ function openGmailComposer() {
 function getGmailComposeData() {
     return {
         to: 'yash@gmail.com',
-        subject: `${workflowState.selectedRole} opportunity`,
+        subject: 'Product designer opportunity',
         body: getDraftTemplate()
     };
 }

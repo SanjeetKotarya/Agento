@@ -1,656 +1,501 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SaaS AI-Powered Browser - LinkedIn Outreach</title>
-    <link rel="stylesheet" href="styles.css" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-  </head>
-  <body>
-    <div class="browser-container">
-      <!-- Browser Window -->
-      <div class="browser-window">
-        <!-- Tabs Bar (Top) -->
-        <div class="tabs-bar">
-          <div class="tabs-container" id="tabsContainer">
-            <div class="tab active" data-tab-id="tab-1">
-              <div class="tab-icon">
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                >
-                  <circle cx="12" cy="12" r="10" />
-                </svg>
-              </div>
-              <span class="tab-title">LinkedIn Profile</span>
-              <button class="tab-close" onclick="closeTab(event, 'tab-1')">
-                ×
-              </button>
-            </div>
-          </div>
-          <button class="new-tab-btn" id="newTabBtn" title="New Tab">+</button>
-          <div class="window-controls">
-            <button class="window-control-btn minimize" title="Minimize">
-              <svg
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <line x1="2" y1="6" x2="10" y2="6" />
-              </svg>
-            </button>
 
-            <button class="window-control-btn maximize" title="Maximize">
-              <svg
-                width="10"
-                height="10"
-                viewBox="0 0 99.000000 99.000000"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <g
-                  transform="translate(0.000000,99.000000) scale(0.100000,-0.100000)"
-                  fill="currentColor"
-                  stroke="none"
-                >
-                  <path
-                    d="M150 936 l0 -35 338 -3 c370 -3 368 -3 397 -64 12 -26 15 -87 15
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SaaS AI-Powered Browser - LinkedIn Outreach</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="browser-container">
+    <!-- Browser Window -->
+    <div class="browser-window">
+      <!-- Tabs Bar (Top) -->
+      <div class="tabs-bar">
+        <div class="tabs-container" id="tabsContainer">
+          <div class="tab active" data-tab-id="tab-1">
+            <div class="tab-icon">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                <circle cx="12" cy="12" r="10" />
+              </svg>
+            </div>
+            <span class="tab-title">LinkedIn Profile</span>
+            <button class="tab-close" onclick="closeTab(event, 'tab-1')">
+              ×
+            </button>
+          </div>
+        </div>
+        <button class="new-tab-btn" id="newTabBtn" title="New Tab">+</button>
+        <div class="window-controls">
+          <button class="window-control-btn minimize" title="Minimize">
+            <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="2" y1="6" x2="10" y2="6" />
+            </svg>
+          </button>
+
+          <button class="window-control-btn maximize" title="Maximize">
+            <svg width="10" height="10" viewBox="0 0 99.000000 99.000000" preserveAspectRatio="xMidYMid meet">
+              <g transform="translate(0.000000,99.000000) scale(0.100000,-0.100000)" fill="currentColor" stroke="none">
+                <path d="M150 936 l0 -35 338 -3 c370 -3 368 -3 397 -64 12 -26 15 -87 15
                -339 l0 -306 38 3 37 3 0 326 0 326 -28 41 c-15 23 -45 51 -67 62 -37 19 -58
-               20 -385 20 l-345 0 0 -34z"
-                  />
-                  <path
-                    d="M88 853 c-14 -9 -36 -33 -47 -54 -20 -35 -21 -51 -21 -340 0 -296 1
+               20 -385 20 l-345 0 0 -34z" />
+                <path d="M88 853 c-14 -9 -36 -33 -47 -54 -20 -35 -21 -51 -21 -340 0 -296 1
                -305 23 -343 13 -23 38 -48 62 -60 37 -19 59 -21 303 -24 308 -4 356 3 407 54
                19 19 35 43 35 54 0 10 5 22 10 25 6 4 10 109 10 284 l0 277 -26 52 c-46 93
                -42 92 -410 92 -279 0 -322 -3 -346 -17z m674 -72 l33 -29 3 -263 c2 -159 -1
                -271 -7 -283 -5 -12 -12 -33 -15 -47 -4 -18 -18 -32 -41 -43 -31 -15 -70 -17
                -315 -14 l-280 3 -27 28 -28 27 -3 268 c-4 289 1 327 45 361 25 20 38 21 314
-               21 l289 0 32 -29z"
-                  />
-                </g>
-              </svg>
-            </button>
+               21 l289 0 32 -29z" />
+              </g>
+            </svg>
+          </button>
 
-            <button class="window-control-btn close" title="Close">
-              <svg
-                width="20"
-                height="20"
-                viewBox="0 0 12 12"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="1.5"
-              >
-                <line x1="3" y1="3" x2="9" y2="9" />
-                <line x1="9" y1="3" x2="3" y2="9" />
-              </svg>
-            </button>
+          <button class="window-control-btn close" title="Close">
+            <svg width="20" height="20" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.5">
+              <line x1="3" y1="3" x2="9" y2="9" />
+              <line x1="9" y1="3" x2="3" y2="9" />
+            </svg>
+          </button>
+        </div>
+      </div>
+
+      <!-- Toolbar -->
+      <div class="toolbar">
+        <div class="nav-buttons">
+          <button class="nav-btn" disabled title="Back">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M19 12H5M12 19l-7-7 7-7" />
+            </svg>
+          </button>
+          <button class="nav-btn" disabled title="Forward">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </button>
+          <button class="nav-btn" disabled title="Reload">
+            <svg fill="currentColor" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M19.146 4.854l-1.489 1.489A8 8 0 1 0 12 20a8.094 8.094 0 0 0 7.371-4.886 1 1 0 1 0-1.842-.779A6.071 6.071 0 0 1 12 18a6 6 0 1 1 4.243-10.243l-1.39 1.39a.5.5 0 0 0 .354.854H19.5A.5.5 0 0 0 20 9.5V5.207a.5.5 0 0 0-.854-.353z" />
+            </svg>
+          </button>
+
+        </div>
+
+        <div class="address-bar-container">
+          <div class="address-bar">
+            <svg class="lock-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+              stroke-width="2">
+              <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
+              <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+            </svg>
+            <input type="text" id="addressInput" placeholder="LinkedIn Profile" value="linkedin.com/in/profile"
+              readonly />
+            <div class="address-bar-actions">
+              <button class="star-btn" title="Bookmark" disabled>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+                  <path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z" />
+                </svg>
+              </button>
+            </div>
           </div>
         </div>
 
-        <!-- Toolbar -->
-        <div class="toolbar">
-          <div class="nav-buttons">
-            <button class="nav-btn" disabled title="Back">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M19 12H5M12 19l-7-7 7-7" />
-              </svg>
-            </button>
-            <button class="nav-btn" disabled title="Forward">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path d="M5 12h14M12 5l7 7-7 7" />
-              </svg>
-            </button>
-            <button class="nav-btn" disabled title="Reload">
-              <svg fill="currentColor" width="18" height="18" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path d="M19.146 4.854l-1.489 1.489A8 8 0 1 0 12 20a8.094 8.094 0 0 0 7.371-4.886 1 1 0 1 0-1.842-.779A6.071 6.071 0 0 1 12 18a6 6 0 1 1 4.243-10.243l-1.39 1.39a.5.5 0 0 0 .354.854H19.5A.5.5 0 0 0 20 9.5V5.207a.5.5 0 0 0-.854-.353z"/>
-              </svg>
-            </button>
-
-          </div>
-
-          <div class="address-bar-container">
-            <div class="address-bar">
-              <svg
-                class="lock-icon"
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <rect x="3" y="11" width="18" height="11" rx="2" ry="2" />
-                <path d="M7 11V7a5 5 0 0 1 10 0v4" />
-              </svg>
-              <input
-                type="text"
-                id="addressInput"
-                placeholder="LinkedIn Profile"
-                value="linkedin.com/in/profile"
-                readonly
-              />
-              <div class="address-bar-actions">
-                <button class="star-btn" title="Bookmark" disabled>
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="#000000"
-                    stroke-width="2"
-                  >
-                    <path
-                      d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"
-                    />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="toolbar-actions">
-            <button
-              class="toolbar-btn"
-              id="aiAssistantBtn"
-              title="AI Assistant"
-            >
-              <svg
-                width="15"
-                height="15"
-                viewBox="0 0 230.000000 230.000000"
-                preserveAspectRatio="xMidYMid meet"
-              >
-                <g
-                  transform="translate(0.000000,230.000000) scale(0.100000,-0.100000)"
-                  fill="#000000"
-                  stroke="none"
-                >
-                  <path
-                    d="M1183 2225 c-95 -26 -163 -72 -216 -145 -36 -51 -120 -199 -237 -420
+        <div class="toolbar-actions">
+          <button class="toolbar-btn" id="aiAssistantBtn" title="AI Assistant">
+            <svg width="15" height="15" viewBox="0 0 230.000000 230.000000" preserveAspectRatio="xMidYMid meet">
+              <g transform="translate(0.000000,230.000000) scale(0.100000,-0.100000)" fill="#000000" stroke="none">
+                <path d="M1183 2225 c-95 -26 -163 -72 -216 -145 -36 -51 -120 -199 -237 -420
                        -146 -276 -443 -818 -492 -898 -123 -201 -140 -357 -57 -524 76 -151 214 -227
                        390 -215 124 8 211 63 334 209 94 112 126 142 185 173 65 33 107 37 412 39
                        250 2 279 4 338 24 159 52 248 159 286 344 28 133 -2 236 -141 497 -86 163
                        -135 249 -351 624 -139 243 -200 299 -334 304 -36 2 -89 -4 -117 -12z m207
                        -762 c255 -460 300 -543 300 -557 0 -11 -48 -15 -252 -19 -216 -4 -265 -8
                        -332 -26 -153 -41 -283 -119 -401 -241 -62 -65 -105 -88 -105 -56 0 28 276
-                       559 440 846 39 69 92 167 117 218 37 74 51 92 68 92 19 0 46 -43 165 -257z"
-                  />
-                </g>
-              </svg>
-            </button>
+                       559 440 846 39 69 92 167 117 218 37 74 51 92 68 92 19 0 46 -43 165 -257z" />
+              </g>
+            </svg>
+          </button>
 
-            <button class="toolbar-btn" id="analyticsBtn" title="Analytics">
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#000000"
-                stroke-width="2"
-              >
-                <line x1="18" y1="18" x2="18" y2="10" />
-                <line x1="12" y1="18" x2="12" y2="4" />
-                <line x1="6" y1="18" x2="6" y2="14" />
+          <button class="toolbar-btn" id="analyticsBtn" title="Analytics">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#000000" stroke-width="2">
+              <line x1="18" y1="18" x2="18" y2="10" />
+              <line x1="12" y1="18" x2="12" y2="4" />
+              <line x1="6" y1="18" x2="6" y2="14" />
+            </svg>
+          </button>
+          <div class="menu-wrapper">
+            <button class="toolbar-btn" id="menuBtn" title="Menu">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="#000000">
+                <circle cx="12" cy="5" r="1.6" />
+                <circle cx="12" cy="12" r="1.6" />
+                <circle cx="12" cy="19" r="1.6" />
               </svg>
             </button>
-            <div class="menu-wrapper">
-              <button class="toolbar-btn" id="menuBtn" title="Menu">
-                <svg
-                  width="18"
-                  height="18"
-                  viewBox="0 0 24 24"
-                  fill="#000000"
-                >
-                  <circle cx="12" cy="5" r="1.6" />
-                  <circle cx="12" cy="12" r="1.6" />
-                  <circle cx="12" cy="19" r="1.6" />
-                </svg>
-              </button>
-              <div class="menu-dropdown" id="menuDropdown">
-                <div class="menu-profile">
-                  <div class="menu-avatar">U</div>
-                  <div class="menu-account">
-                    <p class="menu-name">User</p>
-                    <p class="menu-status">Signed in</p>
+            <div class="menu-dropdown" id="menuDropdown">
+              <div class="menu-profile">
+                <div class="menu-avatar">U</div>
+                <div class="menu-account">
+                  <p class="menu-name">User</p>
+                  <p class="menu-status">Signed in</p>
+                </div>
+              </div>
+              <div class="menu-section">
+                <button class="menu-item">
+                  <span>New tab</span>
+                  <span class="shortcut">Ctrl+T</span>
+                </button>
+                <button class="menu-item">
+                  <span>New window</span>
+                  <span class="shortcut">Ctrl+N</span>
+                </button>
+                <button class="menu-item">
+                  <span>New incognito window</span>
+                  <span class="shortcut">Ctrl+Shift+N</span>
+                </button>
+              </div>
+              <div class="menu-section">
+                <button class="menu-item">
+                  <span>History</span>
+                  <span class="shortcut">Ctrl+H</span>
+                </button>
+                <button class="menu-item">
+                  <span>Downloads</span>
+                  <span class="shortcut">Ctrl+J</span>
+                </button>
+                <button class="menu-item">
+                  <span>Bookmarks and lists</span>
+                </button>
+                <button class="menu-item">
+                  <span>Extensions</span>
+                </button>
+              </div>
+              <div class="menu-section">
+                <button class="menu-item">
+                  <span>More tools</span>
+                </button>
+                <button class="menu-item">
+                  <span>Settings</span>
+                </button>
+                <button class="menu-item">
+                  <span>Help</span>
+                </button>
+                <button class="menu-item">
+                  <span>Exit</span>
+                </button>
+              </div>
+              <div class="menu-section zoom-section">
+                <span>Zoom</span>
+                <div class="zoom-controls">
+                  <button class="zoom-btn">-</button>
+                  <span>100%</span>
+                  <button class="zoom-btn">+</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Content Area -->
+      <div class="content-area">
+        <!-- Profile View -->
+        <div class="web-view-container active" data-tab-id="tab-1" id="webView-tab-1">
+          <img src="profile.png" alt="LinkedIn Profile" />
+        </div>
+
+        <!-- AI Assistant Sidebar (Fixed) -->
+        <div class="web-view-overlay" id="webViewOverlay">
+          <div class="workflow-header">
+            <div class="workflow-brand">
+              <img src="logo.png" alt="Agento" />
+            </div>
+            <div class="workflow-header-actions">
+              <button class="clear-chat-btn" id="clearChatBtn">+</button>
+
+            </div>
+          </div>
+          <div class="ai-workflow-panel" id="workflowPanel">
+            <div class="workflow-content">
+              <section class="workflow-step" data-step="0" id="step0">
+                <div class="welcome-card">
+                  <div class="welcome-message">
+                    <h3>Hi!<br>How are you doing today?</h3>
                   </div>
                 </div>
-                <div class="menu-section">
-                  <button class="menu-item">
-                    <span>New tab</span>
-                    <span class="shortcut">Ctrl+T</span>
-                  </button>
-                  <button class="menu-item">
-                    <span>New window</span>
-                    <span class="shortcut">Ctrl+N</span>
-                  </button>
-                  <button class="menu-item">
-                    <span>New incognito window</span>
-                    <span class="shortcut">Ctrl+Shift+N</span>
-                  </button>
-                </div>
-                <div class="menu-section">
-                  <button class="menu-item">
-                    <span>History</span>
-                    <span class="shortcut">Ctrl+H</span>
-                  </button>
-                  <button class="menu-item">
-                    <span>Downloads</span>
-                    <span class="shortcut">Ctrl+J</span>
-                  </button>
-                  <button class="menu-item">
-                    <span>Bookmarks and lists</span>
-                  </button>
-                  <button class="menu-item">
-                    <span>Extensions</span>
-                  </button>
-                </div>
-                <div class="menu-section">
-                  <button class="menu-item">
-                    <span>More tools</span>
-                  </button>
-                  <button class="menu-item">
-                    <span>Settings</span>
-                  </button>
-                  <button class="menu-item">
-                    <span>Help</span>
-                  </button>
-                  <button class="menu-item">
-                    <span>Exit</span>
-                  </button>
-                </div>
-                <div class="menu-section zoom-section">
-                  <span>Zoom</span>
-                  <div class="zoom-controls">
-                    <button class="zoom-btn">-</button>
-                    <span>100%</span>
-                    <button class="zoom-btn">+</button>
+              </section>
+
+              <section class="workflow-step hidden" data-step="1" id="step1">
+                <div class="chat-thread">
+                  <div class="chat-bubble ai">
+                    I've detected a candidate profile. Which role should I
+                    screen for?
                   </div>
+                </div>
+                <div class="action-card">
+                  <div class="chat-bubble ai">
+                    Share the JD and I’ll handle the screening flow for you.
+                  </div>
+                  <button class="upload-jd" id="uploadJdBtn">Upload JD</button>
+                  <div class="jd-progress hidden" id="jdProgress" aria-live="polite">
+                    <div class="chat-bubble user">
+                      job_description.pdf
+                    </div>
+
+                    <div class="jd-progress-header">
+                      <span>Processing your JD</span>
+                      <span class="jd-progress-status" id="jdProgressStatus">Analyzing…</span>
+                    </div>
+                    <div class="jd-progress-bar">
+                      <div class="jd-progress-bar-fill" id="jdProgressBarFill"></div>
+                    </div>
+                  </div>
+                </div>
+              </section>
+
+              <section class="workflow-step hidden" data-step="2" id="step2">
+                <div class="chat-thread">
+                  <div class="chat-bubble user">
+                    job_description.pdf
+                  </div>
+                  <div class="chat-bubble ai" id="selectedRoleText">
+                    Let's screen for Senior UX Designer.
+                  </div>
+                  <div class="chat-bubble ai subtle">
+                    Perfect. Running the match against the profile now.
+                  </div>
+                </div>
+                <div class="analysis-card">
+                  <div class="analysis-header">
+                    <div>
+                      <p class="label">Analysis</p>
+                      <h5 id="selectedRoleSummary">Senior UX Designer</h5>
+                    </div>
+                    <div class="match-badge">88% Match</div>
+                  </div>
+                  <ul class="comparison-list">
+                    <li class="match-item positive">
+                      <span style="color: green;">✓</span> Experience: 5 Years
+                    </li>
+                    <li class="match-item positive">
+                      <span style="color: green;">✓</span> Skills: Figma, Design Systems
+                    </li>
+                    <li class="match-item warning">
+                      <span style="color: red;">X</span> Location: New York <span>(Role is Remote)</span>
+                    </li>
+                  </ul>
+                </div>
+                <div class="suggestion-chips">
+                  <button class="upload-jd" id="checkGithubBtn">
+                    Check GitHub
+                  </button>
+                  <button class="upload-jd" id="draftEmailChip">
+                    Draft Outreach Email
+                  </button>
+                </div>
+              </section>
+
+              <section class="workflow-step hidden" data-step="3" id="step3">
+                <div class="chat-thread">
+                  <div class="chat-bubble user">
+                    Draft an outreach email for this candidate.
+                  </div>
+                  <div class="chat-bubble ai subtle">
+                    Draft ready. Adjust tone or send directly.
+                  </div>
+                </div>
+                <div class="draft-card">
+                  <div class="draft-header">
+                    <h5>Draft mail</h5>
+                    <span class="tone-label">Tone</span>
+                    <div class="tone-toggle-group">
+                      <button class="tone-toggle active" data-tone="casual">
+                        Casual
+                      </button>
+                      <button class="tone-toggle" data-tone="professional">
+                        Professional
+                      </button>
+                    </div>
+                  </div>
+                  <textarea id="draftTextarea" rows="6" aria-label="Draft outreach email">
+Hi Yash, I saw your work on Design Systems and think you'd be perfect for our Senior UX role. We use Figma extensively. Open to a chat?</textarea>
+                  <div class="draft-actions">
+                    <button class="upload-jd" id="regenerateDraftBtn">
+                      Regenerate
+                    </button>
+                    <button class="upload-jd" id="openGmailBtn">
+                      Send Mail
+                    </button>
+                  </div>
+                </div>
+              </section>
+            </div>
+          </div>
+          <div class="workflow-toast" id="workflowToast" role="status"></div>
+
+          <div class="workflow-footer">
+
+            <button class="suggestion-btn" id="scanPageBtn">Scan the page</button>
+
+
+            <div class="input-area">
+              <div class="footer-input">
+                <textarea id="footerComposer" rows="1" placeholder="How can I help you today?"
+                  aria-label="Ask Agento"></textarea>
+              </div>
+              <div class="footer-composer">
+                <button class="attachment-btn" id="attachmentBtn" title="Attach file">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path
+                      d="M21.44 11.05l-8.49 8.49a5 5 0 0 1-7.07-7.07l8.49-8.49a3 3 0 0 1 4.24 4.24l-8.49 8.49a1 1 0 0 1-1.41-1.41l7.78-7.78">
+                    </path>
+                  </svg>
+                </button>
+                <div class="attachment-preview" id="attachmentPreview"></div>
+                <input type="file" id="attachmentInput" hidden multiple />
+
+                <div class="footer-actions">
+                  <button class="footer-icon-btn" title="Voice input">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <rect x="9" y="2" width="6" height="12" rx="3"></rect>
+                      <path d="M5 10v2a7 7 0 0 0 14 0v-2"></path>
+                      <line x1="12" y1="19" x2="12" y2="22"></line>
+                      <line x1="8" y1="22" x2="16" y2="22"></line>
+                    </svg>
+                  </button>
+                  <button class="footer-send-btn" title="Send prompt">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <line x1="22" y1="2" x2="11" y2="13"></line>
+                      <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                    </svg>
+                  </button>
                 </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Content Area -->
-        <div class="content-area">
-          <!-- Profile View -->
-          <div
-            class="web-view-container active"
-            data-tab-id="tab-1"
-            id="webView-tab-1"
-          >
-            <img src="profile.png" alt="LinkedIn Profile" />
-          </div>
-
-          <!-- AI Assistant Sidebar (Fixed) -->
-          <div class="web-view-overlay" id="webViewOverlay">
-            <div class="workflow-header">
-              <div class="workflow-brand">
-                <img src="logo.png" alt="Agento" />
-              </div>
-              <div class="workflow-header-actions">
-                <button class="clear-chat-btn" id="clearChatBtn">
-                  Clear chat
-                </button>
-                <button class="close-panel" onclick="closeWorkflowPanel()">
-                  ×
-                </button>
+        <!-- Analytics View -->
+        <div class="analytics-view" id="analyticsView" style="display: none">
+          <div class="analytics-container">
+            <div class="analytics-header">
+              <h2>Analytics Dashboard</h2>
+              <div class="time-filter">
+                <button class="filter-btn active">Today</button>
+                <button class="filter-btn">Week</button>
+                <button class="filter-btn">Month</button>
               </div>
             </div>
-            <div class="ai-workflow-panel" id="workflowPanel">
-              <div class="workflow-content">
-                <section class="workflow-step" data-step="1" id="step1">
-                  <div class="chat-thread">
-                    <div class="chat-bubble ai">
-                      I've detected a candidate profile. Which role should I
-                      screen for?
-                    </div>
-                  </div>
-                  <div class="action-card">
-                    <div class="chat-bubble ai">
-                      Share the JD and I’ll handle the screening flow for you.
-                    </div>
-                    <button class="upload-jd" id="uploadJdBtn">Upload JD</button>
-                    <div class="jd-progress hidden" id="jdProgress" aria-live="polite">
-                      <div class="jd-progress-header">
-                        <span>Processing your JD</span>
-                        <span class="jd-progress-status" id="jdProgressStatus"
-                          >Analyzing…</span
-                        >
-                      </div>
-                      <div class="jd-progress-bar">
-                        <div
-                          class="jd-progress-bar-fill"
-                          id="jdProgressBarFill"
-                        ></div>
-                      </div>
-                    </div>
-                  </div>
-                </section>
 
-                <section class="workflow-step hidden" data-step="2" id="step2">
-                  <div class="chat-thread">
-                    <div class="chat-bubble user">
-                      job_description.pdf
-                    </div>
-                    <div class="chat-bubble ai" id="selectedRoleText">
-                      Let's screen for Senior UX Designer.
-                    </div>
-                    <div class="chat-bubble ai subtle">
-                      Perfect. Running the match against the profile now.
-                    </div>
-                  </div>
-                  <div class="analysis-card">
-                    <div class="analysis-header">
-                      <div>
-                        <p class="label">Analysis</p>
-                        <h5 id="selectedRoleSummary">Senior UX Designer</h5>
-                      </div>
-                      <div class="match-badge">88% Match</div>
-                    </div>
-                    <ul class="comparison-list">
-                      <li class="match-item positive">
-                        ✓ Experience: 5 Years <span>(Req: 4+)</span>
-                      </li>
-                      <li class="match-item positive">
-                        ✓ Skills: Figma, Design Systems
-                      </li>
-                      <li class="match-item warning">
-                        ⚠️ Location: New York <span>(Role is Remote)</span>
-                      </li>
-                    </ul>
-                  </div>
-                  <div class="suggestion-chips">
-                    <button class="chip-btn" id="checkGithubBtn">
-                      Check GitHub
-                    </button>
-                    <button class="chip-btn" id="draftEmailChip">
-                      Draft Outreach Email
-                    </button>
-                  </div>
-                </section>
-
-                <section class="workflow-step hidden" data-step="3" id="step3">
-                  <div class="chat-thread">
-                    <div class="chat-bubble user">
-                      Draft an outreach email for this candidate.
-                    </div>
-                    <div class="chat-bubble ai subtle">
-                      Draft ready. Adjust tone or send directly.
-                    </div>
-                  </div>
-                  <div class="draft-card">
-                    <div class="draft-header">
-                        <h5>Draft mail</h5>
-                      <span class="tone-label">Tone</span>
-                      <div class="tone-toggle-group">
-                        <button class="tone-toggle active" data-tone="casual">
-                          Casual
-                        </button>
-                        <button class="tone-toggle" data-tone="professional">
-                          Professional
-                        </button>
-                      </div>
-                    </div>
-                    <textarea
-                      id="draftTextarea"
-                      rows="6"
-                      aria-label="Draft outreach email"
-                    >
-Hi Yash, I saw your work on Design Systems and think you'd be perfect for our Senior UX role. We use Figma extensively. Open to a chat?</textarea
-                    >
-                    <div class="draft-actions">
-                      <button class="btn-secondary" id="regenerateDraftBtn">
-                        Regenerate
-                      </button>
-                      <button class="btn-primary full-width" id="openGmailBtn">
-                        Send Mail
-                      </button>
-                    </div>
-                  </div>
-                </section>
-              </div>
-            </div>
-            <div class="workflow-toast" id="workflowToast" role="status"></div>
-
-            <div class="workflow-footer">
-              <div class="input-area">
-                <div class="footer-input">
-                  <textarea
-                    id="footerComposer"
-                    rows="1"
-                    placeholder="How can I help you today?"
-                    aria-label="Ask Agento"
-                  ></textarea>
+            <div class="analytics-grid">
+              <div class="stat-card">
+                <div class="stat-icon" style="background: #e3f2fd">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#1976d2" stroke-width="2">
+                    <path
+                      d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  </svg>
                 </div>
-                <div class="footer-composer">
-                  <button
-                    class="attachment-btn"
-                    id="attachmentBtn"
-                    title="Attach file"
-                  >
-                    <svg
-                      width="18"
-                      height="18"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                      stroke-width="2"
-                    >
-                      <path
-                        d="M21.44 11.05l-8.49 8.49a5 5 0 0 1-7.07-7.07l8.49-8.49a3 3 0 0 1 4.24 4.24l-8.49 8.49a1 1 0 0 1-1.41-1.41l7.78-7.78"
-                      ></path>
-                    </svg>
-                  </button>
-                  <div class="attachment-preview" id="attachmentPreview"></div>
-                  <input type="file" id="attachmentInput" hidden multiple />
+                <div class="stat-content">
+                  <h3 id="profilesScanned">24</h3>
+                  <p>Profiles Scanned</p>
+                </div>
+              </div>
 
-                  <div class="footer-actions">
-                    <button class="footer-icon-btn" title="Voice input">
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <rect x="9" y="2" width="6" height="12" rx="3"></rect>
-                        <path d="M5 10v2a7 7 0 0 0 14 0v-2"></path>
-                        <line x1="12" y1="19" x2="12" y2="22"></line>
-                        <line x1="8" y1="22" x2="16" y2="22"></line>
-                      </svg>
-                    </button>
-                    <button class="footer-send-btn" title="Send prompt">
-                      <svg
-                        width="18"
-                        height="18"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      >
-                        <line x1="22" y1="2" x2="11" y2="13"></line>
-                        <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
-                      </svg>
-                    </button>
-                  </div>
+              <div class="stat-card">
+                <div class="stat-icon" style="background: #f3e5f5">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7b1fa2" stroke-width="2">
+                    <line x1="22" y1="2" x2="11" y2="13" />
+                    <polygon points="22 2 15 22 11 13 2 9 22 2" />
+                  </svg>
+                </div>
+                <div class="stat-content">
+                  <h3 id="emailsSent">18</h3>
+                  <p>Emails Sent</p>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon" style="background: #e8f5e9">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#388e3c" stroke-width="2">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </div>
+                <div class="stat-content">
+                  <h3 id="successRate">75%</h3>
+                  <p>Success Rate</p>
+                </div>
+              </div>
+
+              <div class="stat-card">
+                <div class="stat-icon" style="background: #fff3e0">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f57c00" stroke-width="2">
+                    <circle cx="12" cy="12" r="10" />
+                    <polyline points="12 6 12 12 16 14" />
+                  </svg>
+                </div>
+                <div class="stat-content">
+                  <h3 id="avgTime">2.4 min</h3>
+                  <p>Avg. Time per Profile</p>
                 </div>
               </div>
             </div>
-          </div>
 
-          <!-- Analytics View -->
-          <div class="analytics-view" id="analyticsView" style="display: none">
-            <div class="analytics-container">
-              <div class="analytics-header">
-                <h2>Analytics Dashboard</h2>
-                <div class="time-filter">
-                  <button class="filter-btn active">Today</button>
-                  <button class="filter-btn">Week</button>
-                  <button class="filter-btn">Month</button>
+            <div class="analytics-charts">
+              <div class="chart-card">
+                <h3>Browsing Activity</h3>
+                <div class="chart-container">
+                  <canvas id="activityChart"></canvas>
                 </div>
               </div>
 
-              <div class="analytics-grid">
-                <div class="stat-card">
-                  <div class="stat-icon" style="background: #e3f2fd">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#1976d2"
-                      stroke-width="2"
-                    >
-                      <path
-                        d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"
-                      />
-                    </svg>
-                  </div>
-                  <div class="stat-content">
-                    <h3 id="profilesScanned">24</h3>
-                    <p>Profiles Scanned</p>
-                  </div>
-                </div>
-
-                <div class="stat-card">
-                  <div class="stat-icon" style="background: #f3e5f5">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#7b1fa2"
-                      stroke-width="2"
-                    >
-                      <line x1="22" y1="2" x2="11" y2="13" />
-                      <polygon points="22 2 15 22 11 13 2 9 22 2" />
-                    </svg>
-                  </div>
-                  <div class="stat-content">
-                    <h3 id="emailsSent">18</h3>
-                    <p>Emails Sent</p>
-                  </div>
-                </div>
-
-                <div class="stat-card">
-                  <div class="stat-icon" style="background: #e8f5e9">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#388e3c"
-                      stroke-width="2"
-                    >
-                      <polyline points="20 6 9 17 4 12" />
-                    </svg>
-                  </div>
-                  <div class="stat-content">
-                    <h3 id="successRate">75%</h3>
-                    <p>Success Rate</p>
-                  </div>
-                </div>
-
-                <div class="stat-card">
-                  <div class="stat-icon" style="background: #fff3e0">
-                    <svg
-                      width="24"
-                      height="24"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="#f57c00"
-                      stroke-width="2"
-                    >
-                      <circle cx="12" cy="12" r="10" />
-                      <polyline points="12 6 12 12 16 14" />
-                    </svg>
-                  </div>
-                  <div class="stat-content">
-                    <h3 id="avgTime">2.4 min</h3>
-                    <p>Avg. Time per Profile</p>
-                  </div>
+              <div class="chart-card">
+                <h3>Agent Performance</h3>
+                <div class="chart-container">
+                  <canvas id="performanceChart"></canvas>
                 </div>
               </div>
+            </div>
 
-              <div class="analytics-charts">
-                <div class="chart-card">
-                  <h3>Browsing Activity</h3>
-                  <div class="chart-container">
-                    <canvas id="activityChart"></canvas>
-                  </div>
-                </div>
-
-                <div class="chart-card">
-                  <h3>Agent Performance</h3>
-                  <div class="chart-container">
-                    <canvas id="performanceChart"></canvas>
-                  </div>
-                </div>
+            <div class="analytics-table-section">
+              <h3>Recent Activity</h3>
+              <div class="activity-table">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Time</th>
+                      <th>Profile</th>
+                      <th>Action</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody id="activityTableBody">
+                    <!-- Populated by JavaScript -->
+                  </tbody>
+                </table>
               </div>
+            </div>
 
-              <div class="analytics-table-section">
-                <h3>Recent Activity</h3>
-                <div class="activity-table">
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Time</th>
-                        <th>Profile</th>
-                        <th>Action</th>
-                        <th>Status</th>
-                      </tr>
-                    </thead>
-                    <tbody id="activityTableBody">
-                      <!-- Populated by JavaScript -->
-                    </tbody>
-                  </table>
+            <div class="workflow-insights">
+              <h3>Workflow Insights</h3>
+              <div class="insights-grid">
+                <div class="insight-card">
+                  <h4>Human Intervention Rate</h4>
+                  <div class="insight-value">12%</div>
+                  <p>Lower than average - workflow is highly automated</p>
                 </div>
-              </div>
-
-              <div class="workflow-insights">
-                <h3>Workflow Insights</h3>
-                <div class="insights-grid">
-                  <div class="insight-card">
-                    <h4>Human Intervention Rate</h4>
-                    <div class="insight-value">12%</div>
-                    <p>Lower than average - workflow is highly automated</p>
-                  </div>
-                  <div class="insight-card">
-                    <h4>Peak Activity Time</h4>
-                    <div class="insight-value">10:00 AM</div>
-                    <p>Most profiles scanned during morning hours</p>
-                  </div>
-                  <div class="insight-card">
-                    <h4>Top Industry</h4>
-                    <div class="insight-value">Technology</div>
-                    <p>45% of profiles are from tech industry</p>
-                  </div>
+                <div class="insight-card">
+                  <h4>Peak Activity Time</h4>
+                  <div class="insight-value">10:00 AM</div>
+                  <p>Most profiles scanned during morning hours</p>
+                </div>
+                <div class="insight-card">
+                  <h4>Top Industry</h4>
+                  <div class="insight-value">Technology</div>
+                  <p>45% of profiles are from tech industry</p>
                 </div>
               </div>
             </div>
@@ -658,7 +503,9 @@ Hi Yash, I saw your work on Design Systems and think you'd be perfect for our Se
         </div>
       </div>
     </div>
+  </div>
 
-    <script src="script.js"></script>
-  </body>
+  <script src="script.js"></script>
+</body>
+
 </html>
