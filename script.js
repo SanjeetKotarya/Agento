@@ -4,18 +4,30 @@ let tabs = [
 ];
 let tabCounter = 1;
 
-// Analytics Data
+// Analytics Data (mock)
 let analyticsData = {
     profilesScanned: 24,
     emailsSent: 18,
     successRate: 75,
-    avgTime: 2.4,
+    timeSavedHours: 3.5,
+    interventionRate: 12,
+    interventionBreakdown: [
+        { label: 'Fully Automated', value: 80, color: '#4f8bf9' },
+        { label: 'Draft Editing', value: 15, color: '#f57c00' },
+        { label: 'Contact Search', value: 5, color: '#d84315' }
+    ],
+    funnel: [
+        { stage: 'Profiles Scanned', count: 24 },
+        { stage: 'Qualified Matches', count: 20 },
+        { stage: 'Emails Found', count: 19 },
+        { stage: 'Emails Sent', count: 18 }
+    ],
     activities: [
-        { time: '09:15 AM', profile: 'John Doe', action: 'Profile Scanned', status: 'success' },
-        { time: '09:22 AM', profile: 'Yash Pundlik', action: 'Email Sent', status: 'success' },
-        { time: '09:30 AM', profile: 'Bob Johnson', action: 'Profile Scanned', status: 'success' },
-        { time: '09:35 AM', profile: 'Alice Brown', action: 'Email Sent', status: 'success' },
-        { time: '09:42 AM', profile: 'Charlie Wilson', action: 'Profile Scanned', status: 'pending' },
+        { time: '09:15 AM', profile: 'John Doe', action: 'Profile Scanned', outcome: 'N/A', status: 'success', quality: 'high' },
+        { time: '09:22 AM', profile: 'Yash Pundlik', action: 'Email Sent', outcome: 'Success - Reply Received', status: 'success', quality: 'high' },
+        { time: '09:30 AM', profile: 'Bob Johnson', action: 'Drafted Email', outcome: 'Edited by Human', status: 'pending', quality: 'med' },
+        { time: '09:35 AM', profile: 'Alice Brown', action: 'Email Sent', outcome: 'Success - Drafted', status: 'success', quality: 'high' },
+        { time: '09:42 AM', profile: 'Charlie Wilson', action: 'Contact Search', outcome: 'Manual Add', status: 'error', quality: 'low' },
     ]
 };
 
@@ -38,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initializeTabs();
     initializeWorkflow();
     setupComposerInput();
+    setupDarkMode();
 });
 
 function initializeTabs() {
@@ -62,6 +75,80 @@ function setupEventListeners() {
     document.getElementById('analyticsBtn').addEventListener('click', toggleAnalytics);
     
     setupMenuDropdown();
+    // Role filter change
+    const roleFilter = document.getElementById('roleFilter');
+    if (roleFilter) {
+        roleFilter.addEventListener('change', (e) => {
+            const role = e.target.value;
+            showWorkflowToast('Filtering analytics: ' + role);
+            // In this mock, we don't change underlying numbers, but redraw charts
+            drawFunnelChart();
+            drawInterventionChart();
+        });
+    }
+    
+    // Sidebar resize logic: add a draggable handle on the left edge
+    const overlay = document.getElementById('webViewOverlay');
+    const handle = document.getElementById('sidebarResizeHandle');
+    if (overlay && handle) {
+        let isResizing = false;
+        const container = document.querySelector('.content-area');
+        const minWidth = 260;
+
+        handle.addEventListener('dblclick', () => {
+            // reset to default width
+            overlay.style.width = '';
+            overlay.style.flex = '';
+            overlay.classList.add('active');
+        });
+
+        handle.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            overlay.style.transition = 'none';
+            document.body.style.cursor = 'col-resize';
+            e.preventDefault();
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (!isResizing) return;
+            const rect = container.getBoundingClientRect();
+            let newWidth = Math.max(minWidth, Math.min(rect.width - 120, rect.right - e.clientX));
+            overlay.style.width = newWidth + 'px';
+            overlay.style.flex = '0 0 ' + newWidth + 'px';
+        });
+
+        document.addEventListener('mouseup', () => {
+            if (!isResizing) return;
+            isResizing = false;
+            overlay.style.transition = '';
+            document.body.style.cursor = '';
+        });
+
+        // touch support
+        handle.addEventListener('touchstart', (e) => {
+            isResizing = true;
+            overlay.style.transition = 'none';
+            document.body.style.cursor = 'col-resize';
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('touchmove', (e) => {
+            if (!isResizing) return;
+            const touch = e.touches[0];
+            const rect = container.getBoundingClientRect();
+            let newWidth = Math.max(minWidth, Math.min(rect.width - 120, rect.right - touch.clientX));
+            overlay.style.width = newWidth + 'px';
+            overlay.style.flex = '0 0 ' + newWidth + 'px';
+            e.preventDefault();
+        }, { passive: false });
+
+        document.addEventListener('touchend', () => {
+            if (!isResizing) return;
+            isResizing = false;
+            overlay.style.transition = '';
+            document.body.style.cursor = '';
+        });
+    }
 }
 
 function setupMenuDropdown() {
@@ -199,6 +286,11 @@ function switchTab(tabId) {
             analyticsView.style.display = 'block';
         }
         document.getElementById('analyticsBtn').classList.add('active');
+        // Redraw charts once analytics view is visible
+        requestAnimationFrame(() => {
+            initializeCharts();
+            updateAnalytics();
+        });
     } else {
         // Show web view
         const activeView = document.getElementById(`webView-${tabId}`);
@@ -284,6 +376,11 @@ function toggleWorkflowPanel() {
     if (btn) btn.classList.toggle('active', isActive);
     // show or hide the suggestion bubble when sidebar opens/closes
     showSuggestionBubble(isActive);
+    // if the sidebar is being closed and there are no chats, ensure welcome card is visible
+    if (!isActive) {
+        const welcomeCard = document.querySelector('.welcome-card');
+        if (welcomeCard) welcomeCard.classList.remove('hidden');
+    }
 }
 
 
@@ -471,6 +568,82 @@ function setupComposerInput() {
     }
 
     renderAttachmentPreview();
+
+    // Send message from footer composer when send button clicked or Enter pressed
+    const sendBtn = document.querySelector('.footer-send-btn');
+    const composer = document.getElementById('footerComposer');
+    function sendComposerMessage() {
+        if (!composer) return;
+        const text = composer.value.trim();
+        if (!text) return;
+
+        // ensure sidebar is visible
+        const overlay = document.getElementById('webViewOverlay');
+        const aiBtn = document.getElementById('aiAssistantBtn');
+        if (overlay && !overlay.classList.contains('active')) {
+            overlay.classList.add('active');
+            if (aiBtn) aiBtn.classList.add('active');
+        }
+
+        // find the last visible workflow step's chat thread
+        const visibleSteps = Array.from(document.querySelectorAll('.workflow-step')).filter(s => !s.classList.contains('hidden'));
+        let targetStep = visibleSteps.length ? visibleSteps[visibleSteps.length - 1] : document.getElementById('step0');
+        if (!targetStep) targetStep = document.querySelector('.workflow-step');
+        let chatThread = targetStep ? targetStep.querySelector('.chat-thread') : null;
+        if (!chatThread) {
+            chatThread = document.createElement('div');
+            chatThread.className = 'chat-thread';
+            // Append the chat thread inside the current step so messages flow downward
+            if (targetStep) {
+                targetStep.appendChild(chatThread);
+            } else {
+                const panel = document.querySelector('.workflow-content');
+                if (panel) panel.appendChild(chatThread);
+            }
+        }
+
+        // create user bubble
+        const userBubble = document.createElement('div');
+        userBubble.className = 'chat-bubble user';
+        userBubble.textContent = text;
+        chatThread.appendChild(userBubble);
+        chatThread.scrollIntoView({ behavior: 'smooth', block: 'end' });
+
+        // hide welcome card once user starts chatting
+        const welcomeCard = document.querySelector('.welcome-card');
+        if (welcomeCard && !welcomeCard.classList.contains('hidden')) {
+            welcomeCard.classList.add('hidden');
+        }
+
+        // clear composer
+        composer.value = '';
+        composer.style.height = 'auto';
+
+        // AI reply (mock)
+        setTimeout(() => {
+            const aiBubble = document.createElement('div');
+            aiBubble.className = 'chat-bubble ai';
+            aiBubble.textContent = 'Sorry i am not a real chat bot';
+            chatThread.appendChild(aiBubble);
+            chatThread.scrollIntoView({ behavior: 'smooth', block: 'end' });
+        }, 600);
+    }
+
+    if (sendBtn) {
+        sendBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            sendComposerMessage();
+        });
+    }
+
+    if (composer) {
+        composer.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                sendComposerMessage();
+            }
+        });
+    }
 }
 
 function formatAttachmentName(name) {
@@ -675,6 +848,14 @@ function resetWorkflow() {
     setWorkflowStep(0);
     updateSelectedRoleText();
     regenerateDraft();
+    // remove all chat threads (user + ai messages) so the conversation is cleared
+    document.querySelectorAll('.workflow-content .chat-thread').forEach(thread => {
+        thread.innerHTML = '';
+    });
+    // restore welcome card when chats are cleared
+    const welcomeCard = document.querySelector('.welcome-card');
+    if (welcomeCard) welcomeCard.classList.remove('hidden');
+
     showWorkflowToast('New chat');
     // show the suggestion bubble again when the chat is cleared
     showSuggestionBubble(true);
@@ -889,25 +1070,51 @@ function toggleAnalytics() {
 }
 
 function updateAnalytics() {
-    document.getElementById('profilesScanned').textContent = analyticsData.profilesScanned;
-    document.getElementById('emailsSent').textContent = analyticsData.emailsSent;
-    document.getElementById('successRate').textContent = analyticsData.successRate + '%';
-    document.getElementById('avgTime').textContent = analyticsData.avgTime + ' min';
-    
-    // Update activity table
+    const profilesEl = document.getElementById('profilesScanned');
+    const emailsEl = document.getElementById('emailsSent');
+    const successEl = document.getElementById('successRate');
+    const timeSavedEl = document.getElementById('timeSaved');
+    const interventionEl = document.getElementById('interventionRate');
+
+    if (profilesEl) profilesEl.textContent = analyticsData.profilesScanned;
+    if (emailsEl) emailsEl.textContent = analyticsData.emailsSent;
+    if (successEl) successEl.textContent = analyticsData.successRate + '%';
+    if (timeSavedEl) timeSavedEl.textContent = analyticsData.timeSavedHours + ' Hours';
+    if (interventionEl) interventionEl.textContent = analyticsData.interventionRate + '%';
+
+    // Update activity table with Outcome and Quality Score
     const tbody = document.getElementById('activityTableBody');
     tbody.innerHTML = '';
-    
+
     analyticsData.activities.forEach(activity => {
         const row = document.createElement('tr');
+        const qualityClass = activity.quality === 'high' ? 'quality-badge high' : (activity.quality === 'med' ? 'quality-badge med' : 'quality-badge low');
+        const outcomeText = activity.outcome || '';
+        const actionCell = `${activity.action}${(activity.action || '').toLowerCase().includes('email') ? ` <a href="#" class="view-link" data-profile="${activity.profile}">View</a>` : ''}`;
+
         row.innerHTML = `
             <td>${activity.time}</td>
             <td>${activity.profile}</td>
-            <td>${activity.action}</td>
+            <td>${actionCell}</td>
+            <td>${outcomeText}</td>
             <td><span class="status-badge ${activity.status}">${activity.status}</span></td>
+            <td><span class="${qualityClass}">${activity.quality.toUpperCase()}</span></td>
         `;
         tbody.appendChild(row);
     });
+
+    // Attach handlers to View links
+    document.querySelectorAll('.activity-table a.view-link').forEach(a => {
+        a.addEventListener('click', (e) => {
+            e.preventDefault();
+            const profile = a.dataset.profile;
+            showWorkflowToast('Opening detail for ' + profile);
+        });
+    });
+
+    // redraw charts using current data
+    drawFunnelChart();
+    drawInterventionChart();
 }
 
 function addActivity(action, profile, status) {
@@ -932,7 +1139,8 @@ function addActivity(action, profile, status) {
 // Charts
 function initializeCharts() {
     drawActivityChart();
-    drawPerformanceChart();
+    drawFunnelChart();
+    drawInterventionChart();
 }
 
 function drawActivityChart() {
@@ -1064,6 +1272,101 @@ function drawPerformanceChart() {
     }
 }
 
+// draw a simple donut chart for intervention analysis
+function drawInterventionChart() {
+    const canvas = document.getElementById('interventionChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.parentElement.offsetWidth;
+    const height = canvas.parentElement.offsetHeight;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.clearRect(0, 0, width, height);
+
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    const textColor = isDarkMode ? '#ffffff' : '#202124';
+
+    const cx = width / 2;
+    const cy = height / 2;
+    const radius = Math.min(width, height) / 3.4;
+    let start = -Math.PI / 2;
+
+    analyticsData.interventionBreakdown.forEach(segment => {
+        const slice = (segment.value / 100) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, radius, start, start + slice);
+        ctx.closePath();
+        ctx.fillStyle = segment.color;
+        ctx.fill();
+
+        // label with label in text color and percentage in segment color
+        const mid = start + slice / 2;
+        const lx = cx + (radius + 18) * Math.cos(mid);
+        const ly = cy + (radius + 18) * Math.sin(mid);
+        ctx.font = '12px Inter';
+        ctx.textAlign = lx > cx ? 'left' : 'right';
+        
+        // Draw label in text color
+        ctx.fillStyle = textColor;
+        ctx.fillText(`${segment.label} `, lx, ly);
+        
+        // Measure text width to position percentage right after label
+        const labelWidth = ctx.measureText(`${segment.label} `).width;
+        ctx.fillStyle = segment.color;
+        ctx.fillText(`(${segment.value}%)`, lx + (lx > cx ? labelWidth : -labelWidth), ly);
+
+        start += slice;
+    });
+}
+
+// draw a horizontal bar chart showing recruitment funnel
+function drawFunnelChart() {
+    const canvas = document.getElementById('funnelChart');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const width = canvas.parentElement.offsetWidth;
+    const height = canvas.parentElement.offsetHeight;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.clearRect(0, 0, width, height);
+
+    const isDarkMode = document.body.classList.contains('dark-mode');
+    const textColor = isDarkMode ? '#ffffff' : '#202124';
+
+    const padding = 16;
+    const barHeight = 32;
+    const gap = 12;
+    const maxCount = Math.max(...analyticsData.funnel.map(s => s.count));
+    const fullBarWidth = width - padding * 2 - 80; // Reserve space for count label
+
+    // Define colors for each bar
+    const barColors = ['#1a73e8', '#43a047', '#00897b', '#00bcd4'];
+
+    analyticsData.funnel.forEach((stage, index) => {
+        const filledWidth = (stage.count / maxCount) * fullBarWidth;
+        const y = padding + index * (barHeight + gap);
+        const barColor = barColors[index] || '#1a73e8';
+
+        // Filled bar (proportional to count)
+        ctx.fillStyle = barColor;
+        ctx.fillRect(padding, y, filledWidth, barHeight);
+
+        // Stage label on the bar (text color based on mode)
+        ctx.fillStyle = textColor;
+        ctx.font = 'bold 13px Inter';
+        ctx.textAlign = 'left';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(stage.stage, padding + 12, y + barHeight / 2);
+
+        // Count label at the right (text color based on mode)
+        ctx.fillStyle = textColor;
+        ctx.font = 'bold 13px Inter';
+        ctx.textAlign = 'right';
+        ctx.fillText(stage.count.toString(), padding + fullBarWidth + 12, y + barHeight / 2);
+    });
+}
+
 // Resize charts on window resize
 let resizeTimeout;
 window.addEventListener('resize', () => {
@@ -1072,3 +1375,36 @@ window.addEventListener('resize', () => {
         initializeCharts();
     }, 250);
 });
+
+// Dark Mode Setup
+function setupDarkMode() {
+    const darkModeBtn = document.getElementById('darkModeToggle');
+    const sunIcon = darkModeBtn ? darkModeBtn.querySelector('.sun-icon') : null;
+    const moonIcon = darkModeBtn ? darkModeBtn.querySelector('.moon-icon') : null;
+    
+    if (!darkModeBtn) return;
+    
+    // Load saved preference
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode) {
+        document.body.classList.add('dark-mode');
+        if (sunIcon && moonIcon) {
+            sunIcon.style.display = 'none';
+            moonIcon.style.display = 'block';
+        }
+    }
+    
+    // Toggle dark mode on button click
+    darkModeBtn.addEventListener('click', () => {
+        const isDarkMode = document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+        
+        if (sunIcon && moonIcon) {
+            sunIcon.style.display = isDarkMode ? 'none' : 'block';
+            moonIcon.style.display = isDarkMode ? 'block' : 'none';
+        }
+        
+        // Redraw charts with new text colors
+        initializeCharts();
+    });
+}

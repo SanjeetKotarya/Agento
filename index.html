@@ -210,6 +210,7 @@
 
         <!-- AI Assistant Sidebar (Fixed) -->
         <div class="web-view-overlay" id="webViewOverlay">
+          <div id="sidebarResizeHandle" class="resize-handle" title="Drag to resize" aria-hidden="false"></div>
           <div class="workflow-header">
             <div class="workflow-brand">
               <img src="logo.png" alt="Agento" />
@@ -231,15 +232,12 @@
 
               <section class="workflow-step hidden" data-step="1" id="step1">
                 <div class="chat-thread">
-                  <div class="chat-bubble ai">
-                    I've detected a candidate profile. Which role should I
-                    screen for?
-                  </div>
                 </div>
                 <div class="action-card">
                   <div class="chat-bubble ai">
-                    Share the JD and I’ll handle the screening flow for you.
+                    I've detected a candidate profile. Share the JD and I’ll handle the screening flow for you.
                   </div>
+
                   <button class="upload-jd" id="uploadJdBtn">Upload JD</button>
                   <div class="jd-progress hidden" id="jdProgress" aria-live="polite">
                     <div class="chat-bubble user">
@@ -384,10 +382,37 @@ Hi Yash, I saw your work on Design Systems and think you'd be perfect for our Se
           <div class="analytics-container">
             <div class="analytics-header">
               <h2>Analytics Dashboard</h2>
-              <div class="time-filter">
-                <button class="filter-btn active">Today</button>
-                <button class="filter-btn">Week</button>
-                <button class="filter-btn">Month</button>
+              <div style="display:flex; gap:12px; align-items:center;">
+                <div class="time-filter">
+                  <button class="filter-btn active">Today</button>
+                  <button class="filter-btn">Week</button>
+                  <button class="filter-btn">Month</button>
+                </div>
+                <button class="dark-mode-btn" id="darkModeToggle" title="Toggle dark mode">
+                  <svg class="sun-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                  </svg>
+                  <svg class="moon-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                  </svg>
+                </button>
+                <div>
+                  <label for="roleFilter" style="font-size:12px;color:#5f6368;margin-right:6px;">Role:</label>
+                  <select id="roleFilter"
+                    style="padding:8px;border-radius:6px;border:1px solid #dadce0;background:white;font-size:13px;">
+                    <option>Senior UX Designer</option>
+                    <option>React Dev</option>
+                    <option>Product Manager</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -401,7 +426,21 @@ Hi Yash, I saw your work on Design Systems and think you'd be perfect for our Se
                 </div>
                 <div class="stat-content">
                   <h3 id="profilesScanned">24</h3>
-                  <p>Profiles Scanned</p>
+                  <p>Profiles Processed</p>
+                </div>
+              </div>
+
+              <div class="stat-card highlight-time">
+                <div class="stat-icon" style="background: #e6f9ef">
+                  <!-- Clock Icon -->
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#188038" stroke-width="2">
+                    <circle cx="12" cy="12" r="9" />
+                    <path d="M12 7v6l4 2" />
+                  </svg>
+                </div>
+                <div class="stat-content">
+                  <h3 id="timeSaved">3.5 Hours</h3>
+                  <p>Equivalent to $150 in billable hours</p>
                 </div>
               </div>
 
@@ -414,48 +453,35 @@ Hi Yash, I saw your work on Design Systems and think you'd be perfect for our Se
                 </div>
                 <div class="stat-content">
                   <h3 id="emailsSent">18</h3>
-                  <p>Emails Sent</p>
+                  <p>Emails Drafted</p>
                 </div>
               </div>
 
               <div class="stat-card">
-                <div class="stat-icon" style="background: #e8f5e9">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#388e3c" stroke-width="2">
-                    <polyline points="20 6 9 17 4 12" />
-                  </svg>
-                </div>
-                <div class="stat-content">
-                  <h3 id="successRate">75%</h3>
-                  <p>Success Rate</p>
-                </div>
-              </div>
-
-              <div class="stat-card">
-                <div class="stat-icon" style="background: #fff3e0">
+                <div class="stat-icon" style="background: #fff7ed">
                   <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#f57c00" stroke-width="2">
                     <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
                   </svg>
                 </div>
                 <div class="stat-content">
-                  <h3 id="avgTime">2.4 min</h3>
-                  <p>Avg. Time per Profile</p>
+                  <h3 id="interventionRate">12% <span id="interventionTrend" class="trend-down">▼</span></h3>
+                  <p>Intervention Rate</p>
                 </div>
               </div>
             </div>
 
-            <div class="analytics-charts">
-              <div class="chart-card">
-                <h3>Browsing Activity</h3>
+            <div class="analytics-charts deep-dive">
+              <div class="chart-card" style="flex:2">
+                <h3>Recruitment Funnel</h3>
                 <div class="chart-container">
-                  <canvas id="activityChart"></canvas>
+                  <canvas id="funnelChart"></canvas>
                 </div>
               </div>
 
-              <div class="chart-card">
-                <h3>Agent Performance</h3>
+              <div class="chart-card" style="flex:1">
+                <h3>Intervention Analysis</h3>
                 <div class="chart-container">
-                  <canvas id="performanceChart"></canvas>
+                  <canvas id="interventionChart"></canvas>
                 </div>
               </div>
             </div>
@@ -469,7 +495,9 @@ Hi Yash, I saw your work on Design Systems and think you'd be perfect for our Se
                       <th>Time</th>
                       <th>Profile</th>
                       <th>Action</th>
+                      <th>Outcome</th>
                       <th>Status</th>
+                      <th>Quality Score</th>
                     </tr>
                   </thead>
                   <tbody id="activityTableBody">
