@@ -1,6 +1,6 @@
 // Tab Management
 let tabs = [
-    { id: 'tab-1', title: 'LinkedIn Profile', image: 'profile.png', active: true, type: 'web' }
+    { id: 'tab-1', title: 'LinkedIn Profile', image: 'images/profile.png', active: true, type: 'web' }
 ];
 let tabCounter = 1;
 
@@ -177,7 +177,7 @@ function createNewTab() {
     const newTab = {
         id: `tab-${tabCounter}`,
         title: 'Google',
-        image: 'google.png',
+        image: 'images/google.png',
         active: false,
         type: 'web'
     };
@@ -868,7 +868,7 @@ function openGmailComposer() {
         gmailTab = {
             id: `tab-${tabCounter}`,
             title: 'Gmail',
-            image: 'mail.png',
+            image: 'images/mail.png',
             active: false,
             type: 'gmail'
         };
