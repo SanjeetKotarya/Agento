@@ -1,2 +1,0 @@
-# Agento
-Agentic Browser
